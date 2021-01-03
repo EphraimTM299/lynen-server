@@ -1,21 +1,23 @@
-const mongoose = require( 'mongoose')
+const mongoose = require('mongoose')
+const AutoIncrement = require('mongoose-sequence')(mongoose)
 const Schema = mongoose.Schema;
-const {objectId} = mongoose.Schema;
+const {ObjectId} = mongoose.Schema.Types;
 
 const orderSchema = new Schema({
  
-    dryclean:  {type: objectId, ref: 'DryClean'},
-    laundry:  {type: objectId, ref: 'Laundry'},
-    household:  {type: objectId, ref: 'Household'},
+    dryclean:  {type: ObjectId, ref: 'DryClean'},
+    laundry:  {type: ObjectId, ref: 'Laundry'},
+    household:  {type: ObjectId, ref: 'Household'},
+    orderId: {type: Number},
      
     pickup: {
         type: Date,
          required: true,
     },
-    dropoff: {
-        type: Date,
-         required: true,
-    },
+    // dropoff: {
+    //     type: Date,
+    //      required: true,
+    // },
     address: {
         type: String,
         required: ['Order address required', true]
@@ -36,10 +38,14 @@ const orderSchema = new Schema({
     },
    
     orderedBy: {
-        type: objectId, ref: 'User'
+        type: ObjectId, ref: 'User'
     },
    
 }, {timestamps: true})
+
+
+
+orderSchema.plugin(AutoIncrement, {inc_field: 'orderId', start_seq: 1000})
 
 const Order = mongoose.model('Order', orderSchema);
 

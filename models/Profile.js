@@ -1,7 +1,7 @@
 const mongoose = require( 'mongoose')
 
 const { Schema } = mongoose;
-const {objectId} = mongoose.Schema;
+
 
 const profileSchema = new Schema({
 	
@@ -10,7 +10,7 @@ const profileSchema = new Schema({
 	secondaryAddress: { type: String },
 	avatar: { type: String},
 		
-    user: {type: mongoose.Schema.Types, ref: 'User'},
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	
 	phone: {
 		type: String,

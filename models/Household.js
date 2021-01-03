@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
-const {objectId} = mongoose.Schema;
+const {ObjectId} = mongoose.Schema.Types
 
 
 const itemSchema = new Schema({
@@ -14,7 +14,7 @@ const householdSchema = new Schema({
     items: [itemSchema],
     
     category: {
-        type: objectId, ref: 'Category'
+        type: ObjectId, ref: 'Category'
     },
    
 }, {timestamps: true})

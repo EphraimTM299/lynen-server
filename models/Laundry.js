@@ -1,18 +1,18 @@
 const mongoose = require( 'mongoose')
 const Schema = mongoose.Schema;
-const {objectId} = mongoose.Schema;
+const {ObjectId} = mongoose.Schema.Types;
 
 
 const clothesSchema = new Schema({
-    name: {type: String, required: true},
-    quantity: { type: Number,required: true}
+    item: {type: String, required: true},
+    itemCount: { type: Number,required: true}
 })
 
 const laundrySchema = new Schema({
  
     weight: {
         type: Number,
-        required: ['Weight of clothes is required']
+        required: ['Weight of clothes is required', true]
     },
     cost: {
         type: Number,
@@ -22,11 +22,11 @@ const laundrySchema = new Schema({
         type: Boolean,
         required: true,
     },
-    ironing: {
-        type: Number,
-        required: true,
+    iron: {
+        type: Boolean,
+        required: ['Please specify ironing', true]
     },
-    instructions: String,
+    
     clothes: [clothesSchema],
    
     category: {
