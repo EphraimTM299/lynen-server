@@ -1,8 +1,8 @@
-import Order from '../../models/Order.js'
-import asyncHandler from "express-async-handler";
-import slugify from 'slugify'
+const Order = require( '../../models/Order.js')
+const asyncHandler = require( "express-async-handler");
+const slugify = require( 'slugify')
 
-export const list = asyncHandler(async(req, res) => {
+exports.list = asyncHandler(async(req, res) => {
   const users = await Order.find({}).sort({createdAt: -1})
   if(users) {
     res.json(users)
@@ -14,7 +14,7 @@ export const list = asyncHandler(async(req, res) => {
 
 })
 
-export const create = asyncHandler(async(req, res) => {
+exports.create = asyncHandler(async(req, res) => {
     const {name, image} = req.body
     const newUser = await Order.create({name, image, slug: slugify(name)})
     if(newUser) {
@@ -26,7 +26,7 @@ export const create = asyncHandler(async(req, res) => {
    
 
 })
-export const read = asyncHandler(async(req, res) => {
+exports.read = asyncHandler(async(req, res) => {
     const {name, expiry, discount} = req.body
     const newUser = await Order.create({name, expiry, discount})
     if(newUser) {
@@ -38,7 +38,7 @@ export const read = asyncHandler(async(req, res) => {
    
 
 })
-export const update = asyncHandler(async(req, res) => {
+exports.update = asyncHandler(async(req, res) => {
     const {name, expiry, discount} = req.body
     const newUser = await Order.create({name, expiry, discount})
     if(newUser) {
@@ -52,7 +52,7 @@ export const update = asyncHandler(async(req, res) => {
 })
 
 
-export const remove = asyncHandler(async(req, res) => {
+exports.remove = asyncHandler(async(req, res) => {
  
     const deleted = await Order.findByIdAndDelete(req.params.couponId)
   

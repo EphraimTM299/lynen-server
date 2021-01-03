@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const {ObjectId} = mongoose.Schema;
 
@@ -26,7 +26,7 @@ const productItemSchema = Schema({
 
 const ProductItem = mongoose.model('ProductItem', productItemSchema);
 
-export default ProductItem;
+module.exports = ProductItem;
 
 
 

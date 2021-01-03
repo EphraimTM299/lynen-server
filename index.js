@@ -1,32 +1,29 @@
-import express  from 'express'
-import {Server} from 'http'
-// import {io} from 'socket.io'
-import * as io from "socket.io"
-import path from 'path'
-import helmet from 'helmet'
-import morgan from 'morgan'
-import cors from 'cors'
-import mongoSanitize from'express-mongo-sanitize'	
-import xss from'xss-clean'
-import colors from 'colors'
-import hpp from'hpp'
-import rateLimit from 'express-rate-limit'
-import errorHandler from'./middleware/error.js'
-import connectDB from './config/db.js'
-import dotenv from 'dotenv'
+const express  = require('express')
+const path = require('path')
+const helmet = require('helmet')
+const morgan = require('morgan')
+const cors = require('cors')
+const mongoSanitize = require('express-mongo-sanitize')	
+const xss = require('xss-clean')
+const colors = require('colors')
+const hpp = require('hpp')
+const rateLimit = require('express-rate-limit')
+const errorHandler = require('./middleware/error.js')
+const connectDB = require('./config/db.js')
+const dotenv = require('dotenv')
 
-import authRouter from './routes/auth.js'
-import adminRouter from './routes/admin/index.js'
-import userRouter from './routes/user.js'
-import categoryRouter from './routes/category.js'
+const authRouter = require('./routes/auth.js')
+const adminRouter = require('./routes/admin/index.js')
+const userRouter = require('./routes/user.js')
+const categoryRouter = require('./routes/category.js')
 
 dotenv.config();
-connectDB();
-const app = express();
-// const http = Server(app)
-// const websocket = (io)(http)
-const PORT = process.env.PORT || 5000;
 
+const app = express();
+const http = require('http').createServer(app)
+
+const PORT = process.env.PORT || 5000;
+connectDB();
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
 // app.use(helmet());
@@ -56,11 +53,37 @@ app.use('/api/v1/categories', categoryRouter);
 app.use(errorHandler);
 
 
-// io.on('connection', function(socket) {
-// 	console.log('Socket.io has connected')
-// })
+const io = require('socket.io')(http
+	
+	, {
+	cors: {
+	  origin: "*:*",
+	  methods: ["GET", "POST"],
+	  allowedHeaders: ["my-custom-header"],
+	  credentials: true
+	},
 
-const server = app.listen(PORT, () => console.log(`App running in ${process.env.NODE_ENV} on port ${PORT}`.green));
+  handlePreflightRequest: (req, res) => {
+    res.writeHead(200, {
+      "Access-Control-Allow-Origin": "*:*",
+      "Access-Control-Allow-Methods": "GET,POST",
+      "Access-Control-Allow-Headers": "my-custom-header",
+      "Access-Control-Allow-Credentials": true
+    });
+    res.end();
+  }
+  }
+  )
+  
+io.on('connection', function(socket) {
+	console.log('Socket.io has connected')
+})
+
+
+http.listen(PORT, () => console.log(`App running in ${process.env.NODE_ENV} on port ${PORT}`.green));
+
+
+
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {

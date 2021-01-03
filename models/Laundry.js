@@ -1,6 +1,12 @@
-import mongoose from 'mongoose'
+const mongoose = require( 'mongoose')
 const Schema = mongoose.Schema;
 const {objectId} = mongoose.Schema;
+
+
+const clothesSchema = new Schema({
+    name: {type: String, required: true},
+    quantity: { type: Number,required: true}
+})
 
 const laundrySchema = new Schema({
  
@@ -20,14 +26,17 @@ const laundrySchema = new Schema({
         type: Number,
         required: true,
     },
+    instructions: String,
+    clothes: [clothesSchema],
    
     category: {
-        type: objectId, ref: 'Category'
+        type: String,
+        default: 'Wash Dry Fold'
     },
    
 }, {timestamps: true})
 
-const Laundry = mongoose.model('Laundry', LaundrySchema);
+const Laundry = mongoose.model('Laundry', laundrySchema);
 
 
-export default DryClean;
+module.exports = Laundry;

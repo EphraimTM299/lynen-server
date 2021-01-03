@@ -1,8 +1,8 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import dotenv from 'dotenv'
+const mongoose = require( 'mongoose')
+const bcrypt = require( 'bcryptjs');
+const jwt = require( 'jsonwebtoken');
+const crypto = require( 'crypto');
+const dotenv = require( 'dotenv')
 dotenv.config();
 
 const { Schema } = mongoose;
@@ -10,8 +10,8 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
 	
-		fullName: { type: String, required: true },
-		// address: { type: String, required: true },
+	fullName: { type: String, required: true },
+	active: { type: Boolean, default: false },
 		
 	
 	email: {
@@ -20,26 +20,20 @@ const userSchema = new Schema({
 		required: [ true, 'Please add an email' ],
 		match: [ /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please add a valid email' ]
 	},
-	phone: {
-		type: String,
-		// required: [ true, 'Please add a contact number' ],
-		// match: [ /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/, 'Please add a valid phone number' ]
-	},
+	
 	password: {
 		type: String,
 		select: false,
 		required: [true, 'Please add a password'],
 		minlength: [ 6, 'Password must be at least 6 characters' ]
 	},
+	
 	role: {
 		type:  String ,
 		enum: [ 'admin', 'manager', 'client' ],
 		default: 'client'
 	},
-	avatar: {
-		type:  String ,
 	
-	},
 	
 	resetPasswordToken: String,
 	resetPasswordExpire: Date,
@@ -61,7 +55,7 @@ userSchema.pre('save', async function(next) {
 
 // Sign JWT
 userSchema.methods.getSignedJwtToken = function() {
-	return jwt.sign({ id: this._id, name: this.fullName, role: this.role, email: this.email, address: this.address }, process.env.JWT_SECRET, {
+	return jwt.sign({ id: this._id, name: this.fullName, role: this.role, email: this.email, active: this.active }, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRE
 	});
 };
@@ -87,4 +81,4 @@ userSchema.methods.getResetPasswordToken = function() {
 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+module.exports = User;

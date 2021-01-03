@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const {objectId} = mongoose.Schema;
 
@@ -22,4 +22,4 @@ const householdSchema = new Schema({
 const Household = mongoose.model('Household', householdSchema);
 
 
-export default Household;
+module.exports = Household;

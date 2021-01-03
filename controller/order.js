@@ -1,8 +1,8 @@
-import Order from '../models/Order.js'
-import asyncHandler from "express-async-handler";
+const Order = require( '../models/Order.js')
+const asyncHandler = require( "express-async-handler");
 
 
-export const list = asyncHandler(async(req, res) => {
+exports.list = asyncHandler(async(req, res) => {
   const coupons = await Order.find({}).sort({createdAt: -1})
   if(coupons) {
     res.json(coupons)
@@ -14,7 +14,7 @@ throw new Error("Listing coupons failed");
 
 })
 
-export const create = asyncHandler(async(req, res) => {
+exports.create = asyncHandler(async(req, res) => {
     const {name, expiry, discount} = req.body
     const newOrder = await Order.create({name, expiry, discount})
     if(newOrder) {
@@ -28,7 +28,7 @@ export const create = asyncHandler(async(req, res) => {
 })
 
 
-export const remove = asyncHandler(async(req, res) => {
+exports.remove = asyncHandler(async(req, res) => {
  
     const deleted = await Order.findByIdAndDelete(req.params.couponId)
   

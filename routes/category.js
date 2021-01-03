@@ -1,6 +1,6 @@
-import express from 'express'
-import {listCategories} from '../controller/admin/categories.js'
-// import {authCheck, adminCheck} from '../middleware/auth.js'
+const express = require('express')
+const {listCategories} = require( '../controller/admin/categories.js')
+// const {authCheck, adminCheck} = require( '../middleware/auth.js'
 
 
 const router = express.Router()
@@ -20,4 +20,4 @@ router.get('/', listCategories)
    
 
 
-export default router; 
+module.exports = router; 

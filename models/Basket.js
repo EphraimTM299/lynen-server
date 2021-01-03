@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require( 'mongoose')
 const Schema = mongoose.Schema
 const {ObjectId} = mongoose.Schema
 
@@ -14,4 +14,4 @@ const basketSchema = new Schema({
 
 const Basket = mongoose.model('Basket', basketSchema)
 
-export default Basket;
+module.exports = Basket;

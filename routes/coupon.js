@@ -1,6 +1,6 @@
-import express from 'express'
-import {create, remove, list} from '../controllers/coupon.js'
-// import {authCheck, adminCheck} from '../middleware/auth.js'
+const express = require('express')
+const {create, remove, list} = require('../controllers/coupon.js')
+// const {authCheck, adminCheck} = require( '../middleware/auth.js'
 
 
 const router = express.Router()
@@ -21,7 +21,7 @@ router.delete('/coupon/:couponId', remove)
    
 
 
-export default router; 
+module.exports = router; 
 
 
 

@@ -1,24 +1,26 @@
-import ErrorResponse from '../utils/errorResponse.js';
-import User from '../models/User.js';
-import asyncHandler from 'express-async-handler';
-import dotenv from 'dotenv'
+const ErrorResponse = require( '../utils/errorResponse.js');
+const User = require( '../models/User.js');
+const asyncHandler = require( 'express-async-handler');
+const dotenv = require( 'dotenv')
 dotenv.config();
-// import sendEmail from '../utils/sendEmail');
-import crypto from 'crypto';
+// const sendEmail = require( '../utils/sendEmail');
+const crypto = require( 'crypto');
 
-const register = asyncHandler(async (req, res, next) => {
+exports.register = asyncHandler(async (req, res, next) => {
 	
 	const { email, fullName, password, confirmPassword } = req.body;
 
 	const existingUser = await User.findOne({email})
 
 	if(existingUser) {
-		return next(new ErrorResponse('User with provided email already exists!', 422));
+		return res.status(422).json({success: false, error: 'User with provided email already exists!'});
+		// return next(new ErrorResponse('User with provided email already exists!', 422));
 	}
 
 	if(password !== confirmPassword) {
-		return next(new ErrorResponse('Passwords do not match', 422));
+		return res.status(422).json({success: false, error: 'Passwords do not match'});
 	}
+
 
 	// Create user
 	const user = await User.create({
@@ -33,12 +35,12 @@ const register = asyncHandler(async (req, res, next) => {
 	sendTokenResponse(user, 200, res);
 });
 
-const login = asyncHandler(async (req, res, next) => {
+exports.login = asyncHandler(async (req, res, next) => {
 	const { email, password } = req.body;
 
 	// Validate email and password
 	if (!email || !password) {
-		return next(new ErrorResponse('Please provide an email and password', 400));
+		res.status(400).json({success: false, error:'Please provide an email and password'});
 	}
 
 	// Find user
@@ -51,7 +53,7 @@ const login = asyncHandler(async (req, res, next) => {
 	}
 
 	if (!user) {
-		return next(new Error('Invalid credentials', 401));
+		res.status(401).json({success: false, error:'Invalid credentials'});
 	}
 
 	//Check password match
@@ -73,7 +75,7 @@ const login = asyncHandler(async (req, res, next) => {
 	// sendTokenResponse(user, 200, res);
 });
 
-const logout = asyncHandler(async (req, res, next) => {
+exports.logout = asyncHandler(async (req, res, next) => {
 	// res.cookie('token', 'none', {
 	// 	expires: new Date(Date.now() + 10 * 1000),
 	// 	httpOnly: true
@@ -86,7 +88,7 @@ const logout = asyncHandler(async (req, res, next) => {
 	
 });
 
-const me = async (req, res, next) => {
+exports.me = async (req, res, next) => {
 	const user = await User.findById(req.user.id);
 
 	if(user == undefined || null) {
@@ -138,7 +140,7 @@ const me = async (req, res, next) => {
 // 	}
 // });
 
-const resetPassword = asyncHandler(async (req, res, next) => {
+exports.resetPassword = asyncHandler(async (req, res, next) => {
 	// Get hashed token
 	const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex');
 
@@ -160,7 +162,8 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 	sendTokenResponse(user, 200, res);
 });
 
-const updateDetails = asyncHandler(async (req, res, next) => {
+
+exports.updateDetails = asyncHandler(async (req, res, next) => {
 	const fieldsToUpdate = {
 		name: req.body.name,
 		email: req.body.email
@@ -176,7 +179,8 @@ const updateDetails = asyncHandler(async (req, res, next) => {
 		data: user
 	});
 });
-const updatePassword = asyncHandler(async (req, res, next) => {
+
+exports.updatePassword = asyncHandler(async (req, res, next) => {
 	const user = await User.findById(req.user.id).select('+password');
 
 	// Check current password
@@ -190,7 +194,7 @@ const updatePassword = asyncHandler(async (req, res, next) => {
 	sendTokenResponse(user, 200, res);
 });
 
-// Get token from  ode, create cookie and send response
+// Get token = require(  ode, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
 	const token = user.getSignedJwtToken();
 
@@ -215,4 +219,3 @@ const sendTokenResponse = (user, statusCode, res) => {
 };
 
 
-export { register, login, logout, updatePassword, updateDetails, me}

@@ -1,8 +1,8 @@
-import Category from '../../models/Category.js'
-import asyncHandler from "express-async-handler";
-import slugify from 'slugify'
+const Category = require( '../../models/Category.js')
+const asyncHandler = require( "express-async-handler");
+const slugify = require( 'slugify')
 
-export const listCategories = asyncHandler(async(req, res) => {
+exports.listCategories = asyncHandler(async(req, res) => {
   const category = await Category.find({}).sort({createdAt: -1})
   if(category) {
     res.json(category)
@@ -13,7 +13,7 @@ export const listCategories = asyncHandler(async(req, res) => {
 
 })
 
-export const createCategory = asyncHandler(async(req, res) => {
+exports.createCategory = asyncHandler(async(req, res) => {
     const {name, image} = req.body
     const newCategory = await Category.create({name, image, slug: slugify(name)})
     if(newCategory) {
@@ -24,7 +24,7 @@ export const createCategory = asyncHandler(async(req, res) => {
    
 
 })
-export const readCategory = asyncHandler(async(req, res) => {
+exports.readCategory = asyncHandler(async(req, res) => {
    
     const category = await Category.findOne({slug: req.params.slug})
     if(category) {
@@ -35,7 +35,7 @@ export const readCategory = asyncHandler(async(req, res) => {
    
 
 })
-export const updateCategory = asyncHandler(async(req, res) => {
+exports.updateCategory = asyncHandler(async(req, res) => {
     let {name} = req.body
     const updated = await Category.findOneAndUpdate({slug: req.params.slug}, {name, slug: slugify(name)}, {new: true})
     if(updated) {
@@ -48,7 +48,7 @@ export const updateCategory = asyncHandler(async(req, res) => {
 })
 
 
-export const removeCategory = asyncHandler(async(req, res) => {
+exports.removeCategory = asyncHandler(async(req, res) => {
   
     const deleted = await Category.findOneAndDelete({slug: req.params.slug})
   

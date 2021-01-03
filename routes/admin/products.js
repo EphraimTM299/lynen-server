@@ -1,8 +1,8 @@
-import express from 'express'
-import {create, read, update, remove, list} from '../../controller/admin/products.js'
+const express = require('express')
+const {create, read, update, remove, list} = require('../../controller/admin/products.js')
 
 
-import {authCheck, adminCheck} from '../../middleware/auth.js'
+const {authCheck, adminCheck} = require('../../middleware/auth.js')
 
 
 const router = express.Router()
@@ -30,5 +30,5 @@ router.route('/product/:id')
 
 
 
-export default router; 
+module.exports = router; 
 

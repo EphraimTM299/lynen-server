@@ -1,8 +1,8 @@
-import Product from '../../models/Product.js'
-import asyncHandler from "express-async-handler";
-import slugify from 'slugify'
+const Product = require( '../../models/Product.js')
+const asyncHandler = require( "express-async-handler");
+const slugify = require( 'slugify')
 
-export const listProducts = asyncHandler(async(req, res) => {
+exports.listProducts = asyncHandler(async(req, res) => {
   const products = await Product.find({}).sort({createdAt: -1})
   if(products) {
     res.json(products)
@@ -14,7 +14,7 @@ export const listProducts = asyncHandler(async(req, res) => {
 
 })
 
-export const createProduct = asyncHandler(async(req, res) => {
+exports.createProduct = asyncHandler(async(req, res) => {
     const {name, image} = req.body
     const newProduct = await Product.create({name, image, slug: slugify(name)})
     if(newProduct) {
@@ -26,7 +26,7 @@ export const createProduct = asyncHandler(async(req, res) => {
    
 
 })
-export const readProduct = asyncHandler(async(req, res) => {
+exports.readProduct = asyncHandler(async(req, res) => {
     
     const product = await Product.findOne({slug: req.params.slug})
     if(product) {
@@ -36,7 +36,7 @@ export const readProduct = asyncHandler(async(req, res) => {
     }
 
 })
-export const updateProduct = asyncHandler(async(req, res) => {
+exports.updateProduct = asyncHandler(async(req, res) => {
     let {name} = req.body
     const updated = await Product.findOneAndUpdate({slug: req.params.slug}, {name, slug: slugify(name)}, {new: true})
     if(updated) {
@@ -49,7 +49,7 @@ export const updateProduct = asyncHandler(async(req, res) => {
 })
 
 
-export const removeProduct = asyncHandler(async(req, res) => {
+exports.removeProduct = asyncHandler(async(req, res) => {
  
     const deleted = await Product.findOneAndDelete({slug: req.params.slug})
   

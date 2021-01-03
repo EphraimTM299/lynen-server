@@ -1,13 +1,15 @@
-import express from 'express'
-import {basket} from '../controller/user.js'
-import {authCheck, adminCheck} from '../middleware/auth.js'
+const express = require('express')
+const {basket, createProfile, me} = require('../controller/user.js')
+const {authCheck, adminCheck} = require('../middleware/auth.js')
 
 
 const router = express.Router()
 
+router.use(authCheck)
 
-
-router.post('/basket', authCheck, basket)
+router.post('/basket', basket)
+router.post('/profile', createProfile)
+router.get('/me',me)
 // router.get('/coupons', list)
 // router.delete('/coupon/:couponId', remove)
 
@@ -21,7 +23,7 @@ router.post('/basket', authCheck, basket)
    
 
 
-export default router; 
+module.exports = router; 
 
 
 

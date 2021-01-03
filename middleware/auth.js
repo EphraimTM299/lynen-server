@@ -1,12 +1,12 @@
-import asyncHandler from "express-async-handler";
-import ErrorResponse from '../utils/errorResponse.js'
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js'
-import dotenv from 'dotenv'
+const asyncHandler = require( "express-async-handler");
+const ErrorResponse = require( '../utils/errorResponse.js')
+const jwt = require( 'jsonwebtoken');
+const User = require( '../models/User.js')
+const dotenv = require( 'dotenv')
 dotenv.config();
 
 
-const authCheck = asyncHandler(async (req, res, next) => {
+exports.authCheck = asyncHandler(async (req, res, next) => {
 	let token;
 
 	// if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -36,7 +36,7 @@ const authCheck = asyncHandler(async (req, res, next) => {
 	}
 });
 
-const adminCheck = asyncHandler(async (req, res, next) => {
+exports.adminCheck = asyncHandler(async (req, res, next) => {
     const {email} = req.user
 
     const adminUser = await User.findOne({email})
@@ -54,4 +54,4 @@ const adminCheck = asyncHandler(async (req, res, next) => {
     
 })
 
-export {adminCheck, authCheck}
+

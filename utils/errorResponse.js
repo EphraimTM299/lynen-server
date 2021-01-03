@@ -6,5 +6,5 @@ class ErrorResponse extends Error {
     }
   }
   
-  export default ErrorResponse;
+  module.exports = ErrorResponse;
   

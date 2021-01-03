@@ -1,10 +1,10 @@
-import express from 'express'
-import {create, read, update, remove, list} from '../../controller/admin/users.js'
-import {createCategory, readCategory, updateCategory, removeCategory, listCategories} from '../../controller/admin/categories.js'
-import {createProduct, readProduct, updateProduct, removeProduct, listProducts} from '../../controller/admin/products.js'
+const express = require('express')
+const {create, read, update, remove, list} = require('../../controller/admin/users.js')
+const {createCategory, readCategory, updateCategory, removeCategory, listCategories} = require('../../controller/admin/categories.js')
+const {createProduct, readProduct, updateProduct, removeProduct, listProducts} = require('../../controller/admin/products.js')
 
 
-import {authCheck, adminCheck} from '../../middleware/auth.js'
+const {authCheck, adminCheck} = require('../../middleware/auth.js')
 
 
 const router = express.Router()
@@ -48,5 +48,5 @@ router.route('/product/:id')
 
 
 
-export default router; 
+module.exports = router; 
 

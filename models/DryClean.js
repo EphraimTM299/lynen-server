@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const {objectId} = mongoose.Schema;
 
@@ -23,4 +23,4 @@ const dryCleanSchema = new Schema({
 const DryClean = mongoose.model('DryClean', dryCleanSchema);
 
 
-export default DryClean;
+module.exports = DryClean;
