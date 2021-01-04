@@ -2,13 +2,13 @@ const Order = require( '../../models/Order.js')
 const asyncHandler = require( "express-async-handler");
 const slugify = require( 'slugify')
 
-exports.list = asyncHandler(async(req, res) => {
-  const users = await Order.find({}).sort({createdAt: -1})
-  if(users) {
-    res.json(users)
+exports.listOrders = asyncHandler(async(req, res) => {
+  const orders = await Order.find({}).populate({ path: 'orderedBy', select: 'fullName' }).populate({ path: 'laundry', select: 'weight cost iron perfumed category' }).sort({createdAt: -1})
+  if(orders) {
+    res.json(orders)
 } else {
-    res.status(400).json({success: false, message: 'Listing Users failed'});
-// throw new Error("Listing Users failed");
+    res.status(400).json({success: false, message: 'Listing orders failed'});
+// throw new Error("Listing orders failed");
 }
   
 

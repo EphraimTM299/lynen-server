@@ -14,6 +14,7 @@ const userSchema = new Schema({
 	active: { type: Boolean, default: false },
 		
 	
+	
 	email: {
 		type: String,
 		unique: true,

@@ -1,10 +1,12 @@
 const express = require('express')
-const {create, read, update, remove, list} = require('../../controller/admin/users.js')
+const {create, read, update, remove, list, getUsersCount} = require('../../controller/admin/users.js')
 const {createCategory, readCategory, updateCategory, removeCategory, listCategories} = require('../../controller/admin/categories.js')
 const {createProduct, readProduct, updateProduct, removeProduct, listProducts} = require('../../controller/admin/products.js')
+const {listOrders} = require('../../controller/admin/orders.js')
 
 
 const {authCheck, adminCheck} = require('../../middleware/auth.js')
+
 
 
 const router = express.Router()
@@ -15,8 +17,9 @@ const router = express.Router()
 
 
 // Admin User CRUD  
+router.get('/users/count', getUsersCount)
 router.post('/user', create)
-router.get('/users', list)
+router.post('/users', list)
 router.route('/user/:id')
     .post(read)
     .put(update)
@@ -38,7 +41,8 @@ router.route('/product/:id')
     .put(updateProduct)
     .delete(removeProduct)
     
-
+// Admin/Manager Order 
+router.get('/orders', listOrders)
     
    
 

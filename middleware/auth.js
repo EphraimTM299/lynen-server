@@ -54,4 +54,19 @@ exports.adminCheck = asyncHandler(async (req, res, next) => {
     
 })
 
+exports.managerCheck = asyncHandler(async (req, res, next) => {
+    const {email} = req.user
+
+    const managerUser = await User.findOne({email})
+
+    if(managerUser.role !== 'manager') {
+        res.status(401).json({success: false, message: 'Manager resource. Access denied'});
+       
+    } else {
+        next()
+    }
+   
+    
+})
+
 

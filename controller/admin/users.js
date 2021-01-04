@@ -2,13 +2,31 @@ const User = require( '../../models/User.js')
 const asyncHandler = require( "express-async-handler");
 const slugify = require( 'slugify')
 
+
+
+
+exports.getUsersCount = asyncHandler(async(req, res) => {
+    let total = await User.find({}).estimatedDocumentCount().exec()
+    res.json(total)
+})
+
 exports.list = asyncHandler(async(req, res) => {
-  const users = await User.find({}).sort({createdAt: -1})
+    const {sort, order, page} = req.body
+    const currentPage = page || 1
+    const perPage = 3
+
+
+  const users = await User.find({})
+  .skip((currentPage - 1) * perPage)
+  .sort([[sort, order]])
+  .limit(perPage)
+
+
   if(users) {
     res.json(users)
 } else {
     res.status(400).json({success: false, message: 'Listing Users failed'});
-// throw new Error("Listing Users failed");
+
 }
   
 
