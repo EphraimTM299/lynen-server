@@ -1,9 +1,18 @@
 const Order = require( '../../models/Order.js')
+const Profile = require( '../../models/Profile.js')
 const asyncHandler = require( "express-async-handler");
 const slugify = require( 'slugify')
 
 exports.listOrders = asyncHandler(async(req, res) => {
-  const orders = await Order.find({}).populate({ path: 'orderedBy', select: 'fullName' }).populate({ path: 'laundry', select: 'weight cost iron perfumed category' }).sort({createdAt: -1})
+    const {sort, order, page} = req.body
+    const currentPage = page || 1
+    const perPage = 20
+  const orders = await Order.find({})
+                            .populate({ path: 'laundry', select: 'weight cost iron perfumed category' })
+                            .populate({ path: 'orderedBy', select: 'fullName email' })
+                            .skip((currentPage - 1) * perPage)
+                            .sort([[sort, order]])
+                            .limit(perPage)
   if(orders) {
     res.json(orders)
 } else {
@@ -11,6 +20,18 @@ exports.listOrders = asyncHandler(async(req, res) => {
 // throw new Error("Listing orders failed");
 }
   
+})
+
+exports.customerProfile = asyncHandler(async(req, res) => {
+    
+    const customerProfile = await Profile.findOne({ user: req.params.customerId})
+    if(customerProfile) {
+        res.json(customerProfile)
+    } else {
+        res.status(400).json({success: false, error: 'Failed to fetch customer details'});
+    
+    }
+   
 
 })
 

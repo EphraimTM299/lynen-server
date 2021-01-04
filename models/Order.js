@@ -8,7 +8,7 @@ const orderSchema = new Schema({
     dryclean:  {type: ObjectId, ref: 'DryClean'},
     laundry:  {type: ObjectId, ref: 'Laundry'},
     household:  {type: ObjectId, ref: 'Household'},
-    orderId: {type: Number},
+    orderId: {type: Number, unique: true, index: true},
      
     pickup: {
         type: Date,

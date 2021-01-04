@@ -36,7 +36,6 @@ app.use(xss());
 // app.use(hpp());
 app.use(cors());
 app.use(mongoSanitize());
-
 app.use(express.json());
 
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -58,15 +57,15 @@ const io = require('socket.io')(http
 	
 	, {
 	cors: {
-	  origin: "*:*",
-	  methods: ["GET", "POST"],
+	  origin: "http://localhost:3000",
+	  methods: ["GET", "POST", "PUT", "DELETE"],
 	  allowedHeaders: ["my-custom-header"],
 	  credentials: true
 	},
 
   handlePreflightRequest: (req, res) => {
     res.writeHead(200, {
-      "Access-Control-Allow-Origin": "*:*",
+      "Access-Control-Allow-Origin": "http://localhost:3000",
       "Access-Control-Allow-Methods": "GET,POST",
       "Access-Control-Allow-Headers": "my-custom-header",
       "Access-Control-Allow-Credentials": true
@@ -77,7 +76,7 @@ const io = require('socket.io')(http
   )
   
 io.on('connection', function(socket) {
-	console.log('Socket.io has connected')
+	console.log('Socket.io has connected backend')
 })
 
 

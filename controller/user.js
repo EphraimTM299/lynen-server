@@ -31,7 +31,10 @@ const {weight, wprice, perfumed, iron, clothes, instructions, address,pickup} = 
 
   const createWash = new Laundry({weight, perfumed, cost: wprice, iron})
 
-  clothes.forEach(c => createWash.clothes.push(c))
+  if(clothes) {
+    clothes.forEach(c => createWash.clothes.push(c))
+  }
+ 
 
 const newWash = await createWash.save()
 

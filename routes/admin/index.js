@@ -2,7 +2,7 @@ const express = require('express')
 const {create, read, update, remove, list, getUsersCount} = require('../../controller/admin/users.js')
 const {createCategory, readCategory, updateCategory, removeCategory, listCategories} = require('../../controller/admin/categories.js')
 const {createProduct, readProduct, updateProduct, removeProduct, listProducts} = require('../../controller/admin/products.js')
-const {listOrders} = require('../../controller/admin/orders.js')
+const {listOrders, customerProfile} = require('../../controller/admin/orders.js')
 
 
 const {authCheck, adminCheck} = require('../../middleware/auth.js')
@@ -42,7 +42,8 @@ router.route('/product/:id')
     .delete(removeProduct)
     
 // Admin/Manager Order 
-router.get('/orders', listOrders)
+router.post('/orders', listOrders)
+router.get('/order/:customerId', customerProfile)
     
    
 

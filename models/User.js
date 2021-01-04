@@ -43,7 +43,7 @@ const userSchema = new Schema({
 		type: Date,
 		default: Date.now
 	}
-});
+}, {timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
 // Encrypt password
 userSchema.pre('save', async function(next) {
@@ -79,6 +79,14 @@ userSchema.methods.getResetPasswordToken = function() {
 
 	return resetToken;
 };
+
+userSchema.virtual('profiles', {
+	ref: 'Profile',
+	foreignField: 'user',
+	localField: '_id',
+
+
+})
 
 const User = mongoose.model('User', userSchema);
 
