@@ -23,6 +23,7 @@ exports.list = asyncHandler(async(req, res) => {
 
 
   if(users) {
+     
     res.json(users)
 } else {
     res.status(400).json({success: false, message: 'Listing Users failed'});

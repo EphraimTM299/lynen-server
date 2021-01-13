@@ -2,6 +2,7 @@ const express  = require('express')
 const path = require('path')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const {EventEmitter} = require('events')
 const cors = require('cors')
 const mongoSanitize = require('express-mongo-sanitize')	
 const xss = require('xss-clean')
@@ -13,13 +14,21 @@ const connectDB = require('./config/db.js')
 const dotenv = require('dotenv')
 
 const authRouter = require('./routes/auth.js')
-const adminRouter = require('./routes/admin/index.js')
+const adminRouter = require('./routes/admin/')
+const managerRouter = require('./routes/manager/')
 const userRouter = require('./routes/user.js')
 const categoryRouter = require('./routes/category.js')
+
 
 dotenv.config();
 
 const app = express();
+
+// Event Emitter
+const mtt = new EventEmitter()
+app.set('eventEmitter', mtt)
+
+
 const http = require('http').createServer(app)
 
 const PORT = process.env.PORT || 5000;
@@ -46,6 +55,7 @@ app.use(express.json());
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin',adminRouter);
+app.use('/api/v1/manager',managerRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/categories', categoryRouter);
 
@@ -82,7 +92,9 @@ io.on('connection', function(socket) {
 
 http.listen(PORT, () => console.log(`App running in ${process.env.NODE_ENV} on port ${PORT}`.green));
 
-
+// mtt.on('testing', (data) => {
+//   console.log('Event Emitter ',data)
+// })
 
 
 // Handle unhandled promise rejections

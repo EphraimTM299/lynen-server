@@ -8,7 +8,7 @@ exports.listOrders = asyncHandler(async(req, res) => {
     const currentPage = page || 1
     const perPage = 20
   const orders = await Order.find({})
-                            .populate({ path: 'laundry', select: 'weight cost iron perfumed category' })
+                            .populate({ path: 'laundry', select: 'weight cost iron perfumed category clothes' })
                             .populate({ path: 'orderedBy', select: 'fullName email' })
                             .skip((currentPage - 1) * perPage)
                             .sort([[sort, order]])

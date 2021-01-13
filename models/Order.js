@@ -33,6 +33,8 @@ const orderSchema = new Schema({
             'Processing',
             'Dispatched',
             'Cancelled',
+            'Confirmed',
+            'Out For Delivery',
             'Completed'
         ]
     },

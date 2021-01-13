@@ -10,7 +10,10 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
 	
+	// lastName: { type: String, required: true },
+	// firstName: { type: String, required: true },
 	fullName: { type: String, required: true },
+
 	active: { type: Boolean, default: false },
 		
 	
@@ -39,11 +42,13 @@ const userSchema = new Schema({
 	resetPasswordToken: String,
 	resetPasswordExpire: Date,
 
-	createdAt: {
-		type: Date,
-		default: Date.now
-	}
+	
 }, {timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}});
+
+
+// userSchema.virtual('fullName').get(function() {
+// 	return `${this.firstName} ${this.lastName}`
+// })
 
 // Encrypt password
 userSchema.pre('save', async function(next) {
@@ -80,13 +85,7 @@ userSchema.methods.getResetPasswordToken = function() {
 	return resetToken;
 };
 
-userSchema.virtual('profiles', {
-	ref: 'Profile',
-	foreignField: 'user',
-	localField: '_id',
 
-
-})
 
 const User = mongoose.model('User', userSchema);
 

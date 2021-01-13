@@ -1,5 +1,5 @@
 const express = require('express')
-const {basket, createProfile, createOrder, me} = require('../controller/user.js')
+const {basket, createProfile, createOrder, me, getOrder, getCompleteOrders, getOrderHistory} = require('../controller/user.js')
 const {authCheck, adminCheck} = require('../middleware/auth.js')
 
 
@@ -10,6 +10,9 @@ router.use(authCheck)
 router.post('/basket', basket)
 router.post('/profile', createProfile)
 router.post('/order', createOrder)
+router.get('/order', getOrder)
+router.get('/orders/completed', getCompleteOrders)
+router.get('/orders/history', getOrderHistory)
 router.get('/me',me)
 // router.get('/coupons', list)
 // router.delete('/coupon/:couponId', remove)

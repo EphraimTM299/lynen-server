@@ -59,3 +59,48 @@ exports.me = asyncHandler(async(req, res) => {
   return res.status(500).json({success: false, error: 'Failed to load profile data'}) 
 }
 })
+
+
+exports.getOrder = asyncHandler(async(req, res) => {
+  
+ 
+    const myOrder = await Order.find({orderedBy: req.user._id, orderStatus: { $ne: 'Completed' }}).populate({path: 'orderedBy', select: 'fullName email -_id'}).populate({path: 'laundry'}).sort([['createdAt', 'desc']])
+ 
+    if(myOrder) {
+      return res.json(myOrder)
+    } else {
+      return res.status(500).json({success: false, error: 'Failed to load order data'}) 
+    }
+   
+  
+  
+  })
+
+exports.getCompleteOrders = asyncHandler(async(req, res) => {
+  
+ 
+    const myOrders = await Order.find({orderedBy: req.user._id}).where('orderStatus', 'Completed').populate({path: 'orderedBy', select: 'fullName email -_id'}).populate({path: 'laundry'})
+ 
+    if(myOrders) {
+      return res.json(myOrders)
+    } else {
+      return res.status(500).json({success: false, error: 'Failed to load order data'}) 
+    }
+   
+  
+  
+  })
+exports.getOrderHistory = asyncHandler(async(req, res) => {
+  
+ 
+    const myOrders = await Order.find({orderedBy: req.user._id}).populate({path: 'orderedBy', select: 'fullName email -_id'}).populate({path: 'laundry'})
+ 
+    if(myOrders) {
+      return res.json(myOrders)
+    } else {
+      return res.status(500).json({success: false, error: 'Failed to load order data'}) 
+    }
+   
+  
+  
+  })
