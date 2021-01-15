@@ -2,23 +2,23 @@ const Coupon = require( '../../models/Coupon.js')
 const asyncHandler = require( "express-async-handler");
 const slugify = require( 'slugify')
 
-exports.list = asyncHandler(async(req, res) => {
-  const users = await Coupon.find({}).sort({createdAt: -1})
-  if(users) {
-    res.json(users)
+exports.listCoupons = asyncHandler(async(req, res) => {
+  const coupons = await Coupon.find({}).sort({createdAt: -1})
+  if(coupons) {
+    res.json(coupons)
 } else {
     res.status(400).json({success: false, message: 'Listing Coupons failed'});
-// throw new Error("Listing Users failed");
+// throw new Error("Listing Coupons failed");
 }
   
 
 })
 
-exports.create = asyncHandler(async(req, res) => {
-    const {name, image} = req.body
-    const newUser = await Coupon.create({name, image, slug: slugify(name)})
-    if(newUser) {
-        res.json(newUser)
+exports.createCoupon = asyncHandler(async(req, res) => {
+    const {name, expiry, discount} = req.body
+    const newCoupon = await Coupon.create({name, expiry, discount})
+    if(newCoupon) {
+        res.json(newCoupon)
     } else {
         res.status(400).json({success: false, message: 'Creating a new Coupon failed'})
         
@@ -26,11 +26,11 @@ exports.create = asyncHandler(async(req, res) => {
    
 
 })
-exports.read = asyncHandler(async(req, res) => {
+exports.readCoupon = asyncHandler(async(req, res) => {
     const {name, expiry, discount} = req.body
-    const newUser = await Coupon.create({name, expiry, discount})
-    if(newUser) {
-        res.json(newUser)
+    const newCoupon = await Coupon.create({name, expiry, discount})
+    if(newCoupon) {
+        res.json(newCoupon)
     } else {
         res.status(400);
     throw new Error("Create new coupon failed");
@@ -38,11 +38,11 @@ exports.read = asyncHandler(async(req, res) => {
    
 
 })
-exports.update = asyncHandler(async(req, res) => {
+exports.updateCoupon = asyncHandler(async(req, res) => {
     const {name, expiry, discount} = req.body
-    const newUser = await Coupon.create({name, expiry, discount})
-    if(newUser) {
-        res.json(newUser)
+    const newCoupon = await Coupon.create({name, expiry, discount})
+    if(newCoupon) {
+        res.json(newCoupon)
     } else {
         res.status(400);
     throw new Error("Create new coupon failed");
@@ -52,7 +52,7 @@ exports.update = asyncHandler(async(req, res) => {
 })
 
 
-exports.remove = asyncHandler(async(req, res) => {
+exports.removeCoupon = asyncHandler(async(req, res) => {
  
     const deleted = await Coupon.findByIdAndDelete(req.params.couponId)
   

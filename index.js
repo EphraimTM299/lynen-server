@@ -10,6 +10,7 @@ const colors = require('colors')
 const hpp = require('hpp')
 const rateLimit = require('express-rate-limit')
 const errorHandler = require('./middleware/error.js')
+const {mongoErrorHandler} = require('./middleware/mongoErrors')
 const connectDB = require('./config/db.js')
 const dotenv = require('dotenv')
 
@@ -46,7 +47,7 @@ app.use(xss());
 app.use(cors());
 app.use(mongoSanitize());
 app.use(express.json());
-
+app.use(mongoErrorHandler);
 // app.use(express.static(path.join(__dirname, 'public')));
 
 //Mount routes

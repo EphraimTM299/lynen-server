@@ -2,6 +2,7 @@ const express = require('express')
 const {create, read, update, remove, list, getUsersCount} = require('../../controller/admin/users.js')
 const {createCategory, readCategory, updateCategory, removeCategory, listCategories} = require('../../controller/admin/categories.js')
 const {createProduct, readProduct, updateProduct, removeProduct, listProducts} = require('../../controller/admin/products.js')
+const {createCoupon, readCoupon, updateCoupon, removeCoupon, listCoupons} = require('../../controller/admin/coupons.js')
 const {listOrders, customerProfile} = require('../../controller/admin/orders.js')
 
 
@@ -40,6 +41,16 @@ router.route('/product/:id')
     .get(readProduct)
     .put(updateProduct)
     .delete(removeProduct)
+    
+
+        
+// Admin Coupon CRUD  
+router.post('/coupon',createCoupon)
+router.get('/coupons', listCoupons)
+router.route('/coupon/:id')
+    .get(readCoupon)
+    .put(updateCoupon)
+    .delete(removeCoupon)
     
 // Admin/Manager Order 
 router.post('/orders', listOrders)

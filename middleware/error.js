@@ -2,8 +2,9 @@ const ErrorResponse = require( '../utils/errorResponse.js');
 
 const errorHandler = (err, req, res, next) => {
 	let error = { ...err };
-	
-
+console.log('error handler errors ====>', err.errors)
+console.log('error handler message ====>',err._message)
+// console.log('error handler', error)
 	// Mongoose bad ObjectId
 	if (err.name === 'CastError') {
 		const message = `Resource not found with id of ${err.value}`;
@@ -18,20 +19,22 @@ const errorHandler = (err, req, res, next) => {
 	}
 
 	// Mongoose validation error
-	if (err.name === 'ValidationError') {
+	if (error.errors) {
         let errorArray = [];
-    
+		
         const keys = Object.keys(err.errors)
         const message = Object.values(err.errors).map((val) => val.message);
         for(let i = 0; i < message.length;i++) {
-            errorArray.push({[keys[i]]:  message[i]})
+            errorArray.push({title: keys[i], message:  message[i].replace('Path', '')})
         }
-		error = new ErrorResponse(errorArray, 400);
+		// error = new ErrorResponse(errorArray, 400);
+		console.log('errorArray ==>', errorArray)
+		return res.status(error.statusCode || 500).json({title: err._message, errors: errorArray})
 	}
 
 	return res.status(error.statusCode || 500).json({
 		success: false,
-		error: error.message || 'Server Error'
+		error:  err || 'Server Error'
 	});
 	
 };

@@ -10,7 +10,7 @@ const couponSchema = Schema({
         uppercase: true,
         required: [true, 'Name is required'],
         minlength: [6, 'Too short'],
-        maxlength: [12, 'Too long'],
+        maxlength: [18, 'Too long'],
 
        
     },
