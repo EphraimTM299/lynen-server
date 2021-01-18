@@ -52,6 +52,7 @@ const newWash = await createWash.save()
 const newOrder = await Order.create({discount: totalAfterDiscount, coupon, laundry: newWash._id, instructions, orderedBy: req.user._id, address, pickup: new Date(pickup)})
 
  if(newOrder) {
+   userCart.remove()
   return res.status(201).json({success: true, message: 'Order created successfully'})
 } else {
   return res.status(500).json({success: false, error: 'Failed to create order'}) 
@@ -61,14 +62,20 @@ const newOrder = await Order.create({discount: totalAfterDiscount, coupon, laund
 exports.addToCart = asyncHandler(async(req, res) => {
   let total;
 const {weight, wprice, perfumed, iron, clothes, instructions, address,pickup} = req.body[0];
-console.log('req.body ==>', req.body)
-console.log('pickup address', pickup)
+
 let w = Number(weight)
 if(iron) {
   total = (w * 35) + (w * 15)
 } else {
   total = (w * 35) 
 }
+
+let hasCart = Cart.findOne({ orderedBy: req.user._id})
+if(hasCart) {
+hasCart.updateOne({laundry: {weight, perfumed, iron, address, pickup: new Date(pickup), instructions, clothes}, orderedBy: req.user._id, cartTotal: total}).then(() => {
+  return res.json({ok: true})
+})
+}else {
   const cart = await Cart.create({laundry: {weight, perfumed, iron, address, pickup: new Date(pickup), instructions, clothes}, orderedBy: req.user._id, cartTotal: total})
 
 if(cart) {
@@ -76,6 +83,9 @@ if(cart) {
 } else {
   return res.status(500).json({success: false, error: 'Failed to save cart'}) 
 }
+
+}
+
 
 })
 
