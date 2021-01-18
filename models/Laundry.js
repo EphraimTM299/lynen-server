@@ -4,6 +4,7 @@ const {ObjectId} = mongoose.Schema.Types;
 
 
 const clothesSchema = new Schema({
+    id: Number,
     item: {type: String, required: true},
     itemCount: { type: Number,required: true}
 })

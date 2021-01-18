@@ -2,8 +2,8 @@ const ErrorResponse = require( '../utils/errorResponse.js');
 
 const errorHandler = (err, req, res, next) => {
 	let error = { ...err };
-console.log('error handler errors ====>', err.errors)
-console.log('error handler message ====>',err._message)
+console.log('error handler errors ====>', err)
+
 // console.log('error handler', error)
 	// Mongoose bad ObjectId
 	if (err.name === 'CastError') {
@@ -28,7 +28,7 @@ console.log('error handler message ====>',err._message)
             errorArray.push({title: keys[i], message:  message[i].replace('Path', '')})
         }
 		// error = new ErrorResponse(errorArray, 400);
-		console.log('errorArray ==>', errorArray)
+	
 		return res.status(error.statusCode || 500).json({title: err._message, errors: errorArray})
 	}
 

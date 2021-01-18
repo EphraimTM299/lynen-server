@@ -1,6 +1,6 @@
 const Coupon = require( '../../models/Coupon.js')
 const asyncHandler = require( "express-async-handler");
-const slugify = require( 'slugify')
+
 
 exports.listCoupons = asyncHandler(async(req, res) => {
   const coupons = await Coupon.find({}).sort({createdAt: -1})
@@ -54,13 +54,12 @@ exports.updateCoupon = asyncHandler(async(req, res) => {
 
 exports.removeCoupon = asyncHandler(async(req, res) => {
  
-    const deleted = await Coupon.findByIdAndDelete(req.params.couponId)
+    const deleted = await Coupon.findByIdAndDelete(req.params.id)
   
     if(deleted) {
-        res.json(deleted)
+        res.json({success: true, message: 'Coupon deleted successfully'})
     } else {
-        res.status(400);
-    throw new Error("Delete coupon failed");
+        res.status(400).json({success: false, message: 'Deleting Coupon failed'});
     }
 
 })

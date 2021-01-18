@@ -1,5 +1,5 @@
 const express = require('express')
-const {basket, createProfile, createOrder, me, getOrder, getCompleteOrders, getOrderHistory} = require('../controller/user.js')
+const {basket, createProfile, createOrder, me, getOrder, getCompleteOrders, getOrderHistory, addToCart, getUserCart, emptyCart, applyCouponToCart} = require('../controller/user.js')
 const {authCheck, adminCheck} = require('../middleware/auth.js')
 
 
@@ -9,8 +9,14 @@ router.use(authCheck)
 
 router.post('/basket', basket)
 router.post('/profile', createProfile)
-router.post('/order', createOrder)
-router.get('/order', getOrder)
+router.route('/order')
+    .post(createOrder)
+    .get(getOrder)
+router.route('/cart')
+    .post(addToCart)
+    .get(getUserCart)
+    .put(emptyCart)
+router.post('/cart/coupon', applyCouponToCart)
 router.get('/orders/completed', getCompleteOrders)
 router.get('/orders/history', getOrderHistory)
 router.get('/me',me)

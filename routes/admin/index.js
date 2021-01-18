@@ -3,6 +3,7 @@ const {create, read, update, remove, list, getUsersCount} = require('../../contr
 const {createCategory, readCategory, updateCategory, removeCategory, listCategories} = require('../../controller/admin/categories.js')
 const {createProduct, readProduct, updateProduct, removeProduct, listProducts} = require('../../controller/admin/products.js')
 const {createCoupon, readCoupon, updateCoupon, removeCoupon, listCoupons} = require('../../controller/admin/coupons.js')
+const {getOrdersCount, getPendingOrdersCount, getUserCount, getTotalSalesAmount} = require('../../controller/admin/dashboard.js')
 const {listOrders, customerProfile} = require('../../controller/admin/orders.js')
 
 
@@ -25,6 +26,13 @@ router.route('/user/:id')
     .post(read)
     .put(update)
     .delete(remove)
+
+    // Admin DashBoard CRUD  
+router.get('/userscount', getUserCount)
+router.get('/orderscount', getOrdersCount)
+router.get('/pendingorderscount', getPendingOrdersCount)
+router.get('/totalsales', getTotalSalesAmount)
+
     
 // Admin Catgeory CRUD  
 router.post('/category',createCategory)

@@ -101,7 +101,7 @@ http.listen(PORT, () => console.log(`App running in ${process.env.NODE_ENV} on p
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
 	console.log(`Error: ${err.message}`.green);
-	server.close(() => process.exit(1));
+	http.close(() => process.exit(1));
 });
 
 

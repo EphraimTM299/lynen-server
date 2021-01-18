@@ -23,6 +23,8 @@ const orderSchema = new Schema({
         required: ['Order address required', true]
 
     },
+    discount: Number,
+    coupon: String,
     instructions: String,
     paymentIntent: {},
     orderStatus: {
