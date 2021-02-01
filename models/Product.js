@@ -4,45 +4,40 @@ const {ObjectId} = mongoose.Schema.Types;
 
 const productSchema = new Schema({
  
-    title: {
+    name: {
         type: String,
         trim: true,
         required: true,
+        unique: true,
        
     },
-    slug: {
+    image: {
         type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        index: true,
     },
+    
     weight: {
         type: Number,
         required: true,
     },
-    perfumed: {
-        type: Boolean,
-        default: 'false'
-    },
-  
-    // price: {
-    //     type: Number,
-    //     required: true,
-    //     trim: true,
-    //     maxlength: 32
+    // perfumed: {
+    //     type: Boolean,
+    //     default: 'false'
     // },
+  
+    price: {
+        type: Number,
+        required: true,
+        trim: true,
+        maxlength: 32
+    },
  
-    category: [{
+    category: {
         type: ObjectId,
         ref: 'Category'
-    }],
-    items: [{
-        type: ObjectId,
-        ref: 'ProductItems'
-    }
+    },
+   
         
-    ]
+    
     
 }, {timestamps: true})
 

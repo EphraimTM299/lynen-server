@@ -9,10 +9,7 @@ const {listOrders, customerProfile} = require('../../controller/admin/orders.js'
 
 const {authCheck, adminCheck} = require('../../middleware/auth.js')
 
-
-
 const router = express.Router()
-
 
 // router.use(authCheck)
 // router.use(adminCheck)
@@ -37,7 +34,7 @@ router.get('/totalsales', getTotalSalesAmount)
 // Admin Catgeory CRUD  
 router.post('/category',createCategory)
 router.get('/categories', listCategories)
-router.route('/category/:slug')
+router.route('/category/:id')
     .get(readCategory)
     .put(updateCategory)
     .delete(removeCategory)

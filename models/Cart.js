@@ -12,6 +12,15 @@ const cartSchema = Schema({
         address: String,
         pickup: Date
     },
+    // household: {
+    //     items: Array,
+    // },
+    // dryclean: {
+    //     items: Array,
+    // },
+    products: {
+        items: Array,
+    },
     coupon: String,
     cartTotal: Number,
     totalAfterDiscount: Number,

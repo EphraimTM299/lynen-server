@@ -50,12 +50,12 @@ exports.updateCategory = asyncHandler(async(req, res) => {
 
 exports.removeCategory = asyncHandler(async(req, res) => {
   
-    const deleted = await Category.findOneAndDelete({slug: req.params.slug})
+    const deleted = await Category.findByIdAndDelete(req.params.id)
   
     if(deleted) {
-        res.json(deleted)
+        res.json({success: true, message: 'Coupon deleted successfully'})
     } else {
-        res.status(400).json({success: false, message: "Delete category failed"});
+        res.status(400).json({success: false, message: 'Deleting Coupon failed'});
     }
 
 })

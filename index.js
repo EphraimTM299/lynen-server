@@ -12,6 +12,7 @@ const rateLimit = require('express-rate-limit')
 const errorHandler = require('./middleware/error.js')
 const {mongoErrorHandler} = require('./middleware/mongoErrors')
 const connectDB = require('./config/db.js')
+const nodemailer = require("nodemailer");
 const dotenv = require('dotenv')
 
 const authRouter = require('./routes/auth.js')
@@ -52,7 +53,25 @@ app.use(mongoErrorHandler);
 
 //Mount routes
 // app.use('/api/v1/shops', require('./routes/shops'));
+const transporter = nodemailer.createTransport({
+  host: "mailhog",
+  port: 1025,
+});
 
+app.get("/send_email/:email", (req, res) => {
+  const { email } = req.params;
+
+  const messageStatus = transporter.sendMail({
+    from: "My Company <company@companydomain.org>",
+    to: email,
+    subject: "Hi Mailhog!",
+    text: "This is the email content",
+  });
+
+  if (!messageStatus) res.json("Error sending message!").status(500);
+
+  res.json("Sent!").status(200);
+});
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin',adminRouter);

@@ -37,6 +37,11 @@ const userSchema = new Schema({
 		enum: [ 'admin', 'manager', 'client' ],
 		default: 'client'
 	},
+
+	referralCode: {
+		type: String,
+		unique: true
+	},
 	
 	
 	resetPasswordToken: String,
@@ -61,7 +66,7 @@ userSchema.pre('save', async function(next) {
 
 // Sign JWT
 userSchema.methods.getSignedJwtToken = function() {
-	return jwt.sign({ id: this._id, name: this.fullName, role: this.role, email: this.email, active: this.active }, process.env.JWT_SECRET, {
+	return jwt.sign({ id: this._id}, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRE
 	});
 };
@@ -79,7 +84,7 @@ userSchema.methods.getResetPasswordToken = function() {
 	// Hash token and set to resetPasswordToken field
 	this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
-	// Set expire
+	// Set to expire in 10mins
 	this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
 
 	return resetToken;

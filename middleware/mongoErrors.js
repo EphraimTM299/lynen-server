@@ -3,7 +3,7 @@
 
 
 exports.mongoErrorHandler = (dbError, req, res, next) => {
-
+console.log('error middleware', dbErro)
 
         const normalizedErrors = [];
         const errorField = 'errors';

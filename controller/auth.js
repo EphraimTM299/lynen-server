@@ -2,10 +2,19 @@ const ErrorResponse = require( '../utils/errorResponse.js');
 const User = require( '../models/User.js');
 const asyncHandler = require( 'express-async-handler');
 const dotenv = require( 'dotenv')
-dotenv.config();
-// const sendEmail = require( '../utils/sendEmail');
+const referralCodes = require('referral-codes')
+const nodemailer = require("nodemailer");
 const crypto = require( 'crypto');
+const sendMail = require( '../services/email');
 
+dotenv.config();
+
+const transporter = nodemailer.createTransport({
+	host: "mailhog",
+	port: 1025,
+  });
+
+  
 exports.register = asyncHandler(async (req, res, next) => {
 	
 	const { email, fullName, password, confirmPassword } = req.body;
@@ -20,13 +29,17 @@ exports.register = asyncHandler(async (req, res, next) => {
 	if(password !== confirmPassword) {
 		return res.status(422).json({success: false, error: 'Passwords do not match'});
 	}
-
+	let referralCode = referralCodes.generate({
+		prefix: "lynen-",
+		lenght: 14
+	})
 
 	// Create user
 	const user = await User.create({
 		fullName,
 		email,
 		password,
+		referralCode
 		// address: ' ',
 		// phone: ' '
 		
@@ -102,43 +115,64 @@ exports.me = async (req, res, next) => {
 	});
 };
 
-// const forgotPassword = asyncHandler(async (req, res, next) => {
-// 	const user = await User.findOne({ email: req.body.email });
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+	const user = await User.findOne({ email: req.body.email });
 
-// 	if (!user) {
-// 		return next(new ErrorResponse('There is no user with that email', 404));
-// 	}
+	console.log('User', user)
 
-// 	// Get reset token
-// 	const resetToken = user.getResetPasswordToken();
+	if (!user) {
 
-// 	await user.save({ validateBeforeSave: false });
+		return res.status(400).json({ success: false, message: 'Email could not be sent' })
+		
+	}
 
-// 	// create reset url
-// 	const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+	// Get reset token
+	const resetToken = user.getResetPasswordToken();
 
-// 	const message = `
-// 	You are receiving this email because you (or someone else)
-// 	has requested the reset of a password.
-// 	Please make a PUT request to: \n\n ${resetUrl}`;
+	await user.save({ validateBeforeSave: false });
 
-// 	try {
-// 		await sendEmail({
-// 			email: user.email,
-// 			subject: 'Password reset token',
-// 			message
-// 		});
-// 		res.status(200).json({ success: true, data: 'Email sent' });
-// 	} catch (error) {
-// 		console.log(error);
-// 		user.resetPasswordToken = undefined;
-// 		user.resetPasswordExpire = undefined;
+	// create reset url
+	const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
 
-// 		await user.save({ validateBeforeSave: false });
+	const message = `
+	<h1>You are receiving this email because you (or someone else)
+	has requested the reset of a password. </h1>
+	<p>Please go to this link to reset your password</p>
+	<a href=${resetUrl} clicktracking=off>Reset Password</a> `;
 
-// 		return next(new ErrorResponse('Email could not be sent', 500));
-// 	}
-// });
+	const messageStatus = transporter.sendMail({
+		from: process.env.EMAIL_FROM,
+		to: email,
+		subject: "Password Reset Request",
+		text: message,
+	  });
+	
+	  if (!messageStatus) res.json("Error sending message!").status(500);
+	
+	  res.json("Sent!").status(200);
+
+
+	// try {
+	// 	await sendMail({
+	// 		to: user.email,
+    //     	subject: 'Password Reset Request',
+    //     	text: message,
+	// 	});
+		
+
+
+	// 	res.status(200).json({ success: true, message: 'Email sent' });
+	// } catch (error) {
+	// console.log('Error email controller', error)
+	// 	user.resetPasswordToken = undefined;
+	// 	user.resetPasswordExpire = undefined;
+
+	// 	await user.save({ validateBeforeSave: false });
+
+	// 	return res.status(400).json({ success: false, message: 'Email could not be sent' });
+		// return next(new ErrorResponse('Email could not be sent', 500));
+	// }
+});
 
 exports.resetPassword = asyncHandler(async (req, res, next) => {
 	// Get hashed token
@@ -150,7 +184,8 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 	});
 
 	if (!user) {
-		return next(new ErrorResponse('There is no user with that email', 404));
+		return res.status(400).json({success: false, message: 'Email could not be sent'});
+		
 	}
 
 	// Set new password
