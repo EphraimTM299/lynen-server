@@ -22,6 +22,10 @@ const profileSchema = new Schema({
 		required: [ true, 'Please add a contact number' ],
 		// match: [ /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/, 'Please add a valid phone number' ]
 	},
+
+	points: {
+		type: Number
+	}
 	
 	// role: {
 	// 	type:  String ,

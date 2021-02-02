@@ -14,7 +14,8 @@ console.log('error handler errors ====>', error)
 	// Mongoose duplicate key
 	if (err.code === 11000) {
 		const message = `${err.errmsg}`;
-        error = new ErrorResponse(message, 400);
+		return res.status(error.statusCode || 500).json({title: err._message, errors: [message]})
+        // error = new ErrorResponse(message, 400);
         
 	}
 

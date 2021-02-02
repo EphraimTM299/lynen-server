@@ -1,9 +1,10 @@
 const Category = require( '../../models/Category.js')
 const asyncHandler = require( "express-async-handler");
-const slugify = require( 'slugify')
+const slugify = require( 'slugify');
+const Product = require('../../models/Product.js');
 
 exports.listCategories = asyncHandler(async(req, res) => {
-  const category = await Category.find({}).sort({createdAt: -1})
+  const category = await Category.find({}).sort({createdAt: 1})
   if(category) {
     res.json(category)
 } else {
@@ -15,7 +16,7 @@ exports.listCategories = asyncHandler(async(req, res) => {
 
 exports.createCategory = asyncHandler(async(req, res) => {
     const {name, image} = req.body
-    const newCategory = await Category.create({name, image, slug: slugify(name)})
+    const newCategory = await Category.create({name})
     if(newCategory) {
         res.json(newCategory)
     } else {
@@ -24,6 +25,21 @@ exports.createCategory = asyncHandler(async(req, res) => {
    
 
 })
+exports.readProductCategory = asyncHandler(async(req, res) => {
+  
+   let category = await Category.findOne({name: req.params.name}).exec()
+  
+    let products = await Product.find({category: category._id}).select('name weight price').exec()
+   
+    if(products) {
+        res.json(products)
+    } else {
+        res.status(400).json({success: false, message:"Products not found"});
+    }
+   
+
+})
+
 exports.readCategory = asyncHandler(async(req, res) => {
    
     const category = await Category.findOne({slug: req.params.slug})

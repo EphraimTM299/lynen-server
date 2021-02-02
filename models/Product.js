@@ -11,9 +11,6 @@ const productSchema = new Schema({
         unique: true,
        
     },
-    image: {
-        type: String,
-    },
     
     weight: {
         type: Number,

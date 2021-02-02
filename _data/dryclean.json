@@ -1,0 +1,22 @@
+[
+    {"title": "Leather Jackets", "price": 500, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Berets/Caps", "price": 60, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Jerseys Heavy", "price": 80, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Jerseys Light - Medium", "price": 70, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Wind Breakers", "price": 90, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Lumber Jackets", "price": 90, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "ain Coats", "price": 150, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Full Length Coat", "price": 170, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "3/4 Length Coat", "price": 150, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Knee Length Coat", "price": 140, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Short Coat", "price": 120, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Ties", "price": 50, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Silk/Dress Sirts", "price": 75, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Evening Shirts", "price": 75, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "General Shirts", "price": 60, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Three Piece Suit", "price": 300, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Two Piece Suit", "price": 200, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Jacket", "price": 90, "category": "601965b057c9c203c72bf4e1"},
+    {"title": "Trousers", "price": 60, "category": "601965b057c9c203c72bf4e1"}
+    
+]

@@ -1,0 +1,11 @@
+[
+    {"name": "T-Shirt", "weight": "0.26", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Pants", "weight": "0.85", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Shirt", "weight": "0.15", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Shorts", "weight": "0.3", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Dress", "weight": "0.235", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Sweater", "weight": "0.35", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Jackets", "weight": "1.2", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Jeans", "weight": "0.725", "category":"6019658c57c9c203c72bf4df"},
+    {"name": "Scarf",  "weight": "0.17", "category":"6019658c57c9c203c72bf4df"}
+]

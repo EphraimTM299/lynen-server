@@ -3,7 +3,7 @@ const asyncHandler = require( "express-async-handler");
 const slugify = require( 'slugify')
 
 exports.listProducts = asyncHandler(async(req, res) => {
-  const products = await Product.find({}).sort({createdAt: -1})
+  const products = await Product.find({}).sort({createdAt: 1}).populate({path: 'category', select: 'name -_id'})
   if(products) {
     res.json(products)
 } else {
@@ -15,13 +15,12 @@ exports.listProducts = asyncHandler(async(req, res) => {
 })
 
 exports.createProduct = asyncHandler(async(req, res) => {
-    const {name, image} = req.body
-    const newProduct = await Product.create({name, image, slug: slugify(name)})
+    const {name, price, weight, category} = req.body
+    const newProduct = await Product.create({name, price, weight, category})
     if(newProduct) {
         res.json(newProduct)
     } else {
-        res.status(400);
-    throw new Error("Create new Product failed");
+        res.status(400).json({success: false, message: 'Create new Product failed'});
     }
    
 
