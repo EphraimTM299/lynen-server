@@ -118,8 +118,7 @@ exports.me = async (req, res, next) => {
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
 	const user = await User.findOne({ email: req.body.email });
 
-	console.log('User', user)
-
+	
 	if (!user) {
 
 		return res.status(400).json({ success: false, message: 'Email could not be sent' })
@@ -140,38 +139,38 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 	<p>Please go to this link to reset your password</p>
 	<a href=${resetUrl} clicktracking=off>Reset Password</a> `;
 
-	const messageStatus = transporter.sendMail({
-		from: process.env.EMAIL_FROM,
-		to: email,
-		subject: "Password Reset Request",
-		text: message,
-	  });
+	// const messageStatus = transporter.sendMail({
+	// 	from: process.env.EMAIL_FROM,
+	// 	to: email,
+	// 	subject: "Password Reset Request",
+	// 	text: message,
+	//   });
+	// console.log('messageStatus', messageStatus)
+	//   if (!messageStatus) res.status(500).json("Error sending message!");
 	
-	  if (!messageStatus) res.json("Error sending message!").status(500);
-	
-	  res.json("Sent!").status(200);
+	//   res.json("Sent!").status(200);
 
 
-	// try {
-	// 	await sendMail({
-	// 		to: user.email,
-    //     	subject: 'Password Reset Request',
-    //     	text: message,
-	// 	});
+	try {
+		await sendMail({
+			to: user.email,
+        	subject: 'Password Reset Request',
+        	text: message,
+		});
 		
 
 
-	// 	res.status(200).json({ success: true, message: 'Email sent' });
-	// } catch (error) {
-	// console.log('Error email controller', error)
-	// 	user.resetPasswordToken = undefined;
-	// 	user.resetPasswordExpire = undefined;
+		res.status(200).json({ success: true, message: 'Email sent' });
+	} catch (error) {
+	console.log('Error email controller', error)
+		user.resetPasswordToken = undefined;
+		user.resetPasswordExpire = undefined;
 
-	// 	await user.save({ validateBeforeSave: false });
+		await user.save({ validateBeforeSave: false });
 
-	// 	return res.status(400).json({ success: false, message: 'Email could not be sent' });
+		return res.status(400).json({ success: false, message: 'Email could not be sent' });
 		// return next(new ErrorResponse('Email could not be sent', 500));
-	// }
+	}
 });
 
 exports.resetPassword = asyncHandler(async (req, res, next) => {
