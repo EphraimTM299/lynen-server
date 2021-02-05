@@ -5,26 +5,42 @@ const {ObjectId} = mongoose.Schema.Types;
 
 const orderSchema = new Schema({
  
-    dryclean:  {type: ObjectId, ref: 'DryClean'},
-    laundry:  {type: ObjectId, ref: 'Laundry'},
-    household:  {type: ObjectId, ref: 'Household'},
+    laundry: {
+        weight: String,
+        perfumed: Boolean,
+        iron: Boolean,
+        items: Array,
+    },
+    household: {
+        items: Array,
+    },
+    dryclean: {
+        items: Array,
+    },
+    sneaker: {
+        items: Array,
+    },
+   
     orderId: {type: Number, unique: true, index: true},
      
     pickup: {
         type: Date,
          required: true,
     },
-    // dropoff: {
-    //     type: Date,
-    //      required: true,
-    // },
+    dropoff: {
+        type: Date,
+         required: true,
+    },
     address: {
         type: String,
         required: ['Order address required', true]
-
     },
-    discount: Number,
+    totalAfterDiscount: {
+        type: Number,
+        default: 0
+    },
     coupon: String,
+    cost: Number,
     instructions: String,
     paymentIntent: {},
     orderStatus: {

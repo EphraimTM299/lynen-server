@@ -26,7 +26,7 @@ const {phone, mobile, primaryAddress, secondaryAddress} = req.body
 }
 })
 
-exports.createOrder = asyncHandler(async(req, res) => {
+exports.createOrder2 = asyncHandler(async(req, res) => {
   
 let userCart = await Cart.findOne({orderedBy: req.user._id})
 const {laundry, coupon, cartTotal, totalAfterDiscount} = userCart
@@ -51,6 +51,55 @@ const newWash = await createWash.save()
 
 
 const newOrder = await Order.create({discount: totalAfterDiscount, coupon, laundry: newWash._id, instructions, orderedBy: req.user._id, address, pickup: new Date(pickup)})
+
+ if(newOrder) {
+   userCart.remove()
+  return res.status(201).json({success: true, message: 'Order created successfully'})
+} else {
+  return res.status(500).json({success: false, error: 'Failed to create order'}) 
+}
+})
+exports.createOrder = asyncHandler(async(req, res) => {
+  
+let userCart = await Cart.findOne({orderedBy: req.user._id})
+const {laundry, household, dryclean, sneaker,  instructions,cartTotal} = userCart
+
+const {coupon, totalAfterDiscount, pickup, dropoff, address} = req.body
+
+
+// if(totalAfterDiscount > 0) {
+//   cost = totalAfterDiscount
+// } else {
+//   cost = cartTotal
+// }
+
+// const {weight, wprice, perfumed, iron, clothes, instructions, address,pickup} = req.body;
+
+//   const createWash = new Laundry({weight, perfumed, cost, iron})
+
+//   if(clothes) {
+//     clothes.forEach(c => createWash.clothes.push(c))
+//   }
+ 
+
+// const newWash = await createWash.save()
+
+
+const newOrder = await Order.create({
+  discount: totalAfterDiscount,
+  coupon,
+  laundry,
+  household,
+  sneaker,
+  dryclean,
+  instructions,
+  orderedBy: req.user._id,
+  address,
+  totalAfterDiscount,
+  cost: cartTotal,
+  pickup: new Date(pickup),
+  dropoff: new Date(dropoff),
+})
 
  if(newOrder) {
    userCart.remove()
@@ -249,19 +298,6 @@ exports.addToCart = asyncHandler(async(req, res) => {
 if(cart.laundry.iron) {
   iron = true
 }
-  // const checkProductPrice = asyncHandler(async (arr, service) => {
-  //   for (let i = 0; i < arr.length; i++) {
-  //     let obj = {}
-  
-  //     obj.product = arr[i]._id;
-  //     obj.itemCount = arr[i].itemCount;
-  //     let {price} = await Product.findById(arr[i]._id).select('price').exec();
-  //     obj.price= arr[i].price;
-  
-  //     service.push(obj)
-  //   }
-  // })
-
 
  
   for (let i = 0; i < cart.laundry.items.length; i++) {
@@ -337,10 +373,10 @@ if(cart.laundry.iron) {
     return sum + (obj.weight)
 }, 0)
 
-console.log('totalWeight', totalWeight)
+
 
 cartTotal = Number((totalWeight * 35) + totalDryClean + totalHousehold + totalSneaker).toFixed(2)
-console.log('cartTotal before iron', cartTotal)
+
 
 if(iron) {
   cartTotal = (Number(cartTotal) + Number(totalWeight * 15)).toFixed(2)
