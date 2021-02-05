@@ -7,20 +7,21 @@ const cartSchema = Schema({
         weight: String,
         perfumed: Boolean,
         iron: Boolean,
-        clothes: Array,
-        instructions: String,
-        address: String,
-        pickup: Date
+        items: Array,
+        
     },
-    // household: {
-    //     items: Array,
-    // },
-    // dryclean: {
-    //     items: Array,
-    // },
-    products: {
+    household: {
         items: Array,
     },
+    dryclean: {
+        items: Array,
+    },
+    sneaker: {
+        items: Array,
+    },
+    instructions: String,
+    address: String,
+    pickup: Date,
     coupon: String,
     cartTotal: Number,
     totalAfterDiscount: Number,

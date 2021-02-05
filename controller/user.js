@@ -4,6 +4,7 @@ const Profile = require('../models/Profile')
 const Coupon = require('../models/Coupon')
 const Laundry = require('../models/Laundry')
 const Order = require('../models/Order')
+const Product = require('../models/Product')
 const asyncHandler = require( "express-async-handler");
 const slugify = require( 'slugify')
 const moment = require('moment')
@@ -59,7 +60,7 @@ const newOrder = await Order.create({discount: totalAfterDiscount, coupon, laund
 }
 })
 
-exports.addToCart = asyncHandler(async(req, res) => {
+exports.addToCart2 = asyncHandler(async(req, res) => {
   let total;
 const {weight, wprice, perfumed, iron, clothes, instructions, address,pickup} = req.body[0];
 
@@ -217,3 +218,149 @@ exports.getOrderHistory = asyncHandler(async(req, res) => {
   
   
   })
+
+
+/* Product Model
+  - name,
+  weight,
+  price,
+  category: id
+
+*/
+
+
+exports.addToCart = asyncHandler(async(req, res) => {
+
+  const { cart } = req.body
+ 
+  let dryclean = [];
+  let sneaker = [];
+  let household = [];
+  let laundry = [];
+  let cartTotal = 0
+
+  const user = await User.findById(req.user._id).exec()
+ 
+  let cartExists = await Cart.findOne({ orderedBy: user._id}).exec()
+ 
+  if(cartExists) cartExists.remove()
+
+  let iron = false
+if(cart.laundry.iron) {
+  iron = true
+}
+  // const checkProductPrice = asyncHandler(async (arr, service) => {
+  //   for (let i = 0; i < arr.length; i++) {
+  //     let obj = {}
+  
+  //     obj.product = arr[i]._id;
+  //     obj.itemCount = arr[i].itemCount;
+  //     let {price} = await Product.findById(arr[i]._id).select('price').exec();
+  //     obj.price= arr[i].price;
+  
+  //     service.push(obj)
+  //   }
+  // })
+
+
+ 
+  for (let i = 0; i < cart.laundry.items.length; i++) {
+    let obj = {}
+
+    obj.id = cart.laundry.items[i].id;
+    obj.item = cart.laundry.items[i].item;
+    obj.weight = cart.laundry.items[i].weight;
+    obj.itemCount = cart.laundry.items[i].itemCount;
+    
+      laundry.push(obj)
+      
+    
+  }
+  
+  for (let i = 0; i < cart.household.items.length; i++) {
+    let obj = {}
+  
+    obj.id = cart.household.items[i].id;
+    obj.item = cart.household.items[i].item;
+    obj.itemCount = cart.household.items[i].itemCount;
+    let {price} = await Product.findById(cart.household.items[i].id).select('price').exec();
+  
+    obj.price= cart.household.items[i].price;
+
+    household.push(obj)
+    
+    
+  }
+  
+  for (let i = 0; i < cart.dryclean.items.length; i++) {
+    let obj = {}
+
+    obj.id = cart.dryclean.items[i].id;
+    obj.item = cart.dryclean.items[i].item;
+    obj.itemCount = cart.dryclean.items[i].itemCount;
+    let {price} = await Product.findById(cart.dryclean.items[i].id).select('price').exec();
+    obj.price= cart.dryclean.items[i].price;
+
+    dryclean.push(obj)
+  }
+
+  for (let i = 0; i < cart.sneaker.items.length; i++) {
+    let obj = {}
+
+    obj.id = cart.sneaker.items[i].id;
+    obj.item = cart.sneaker.items[i].item;
+    obj.itemCount = cart.sneaker.items[i].itemCount;
+    let {price} = await Product.findById(cart.sneaker.items[i].id).select('price').exec();
+    obj.price= cart.sneaker.items[i].price;
+
+    sneaker.push(obj)
+    
+    
+  }
+ 
+ 
+
+
+  let  totalDryClean = dryclean.reduce((sum, obj) => {
+    return sum + (obj.itemCount * obj.price)
+}, 0)
+
+  let  totalHousehold = household.reduce((sum, obj) => {
+    return sum + (obj.itemCount * obj.price)
+}, 0)
+
+  let  totalSneaker = sneaker.reduce((sum, obj) => {
+    return sum + (obj.itemCount * obj.price)
+}, 0)
+
+  let  totalWeight = laundry.reduce((sum, obj) => {
+    return sum + (obj.weight)
+}, 0)
+
+console.log('totalWeight', totalWeight)
+
+cartTotal = Number((totalWeight * 35) + totalDryClean + totalHousehold + totalSneaker).toFixed(2)
+console.log('cartTotal before iron', cartTotal)
+
+if(iron) {
+  cartTotal = (Number(cartTotal) + Number(totalWeight * 15)).toFixed(2)
+}
+
+console.log('cart total', cartTotal)
+
+let newCart = await Cart.create({
+  household: {items: household},
+  sneaker: {items: sneaker},
+  dryclean: {items: dryclean},
+  laundry: {items: laundry, iron: cart.laundry.iron, perfumed: cart.laundry.perfumed, weight: Number(totalWeight).toFixed(2)},
+  cartTotal,
+  orderedBy: user._id
+})
+
+if(newCart) {
+  res.json({cart: newCart})
+} else {
+  return res.status(500).json({success: false, error: 'Failed to save laundry basket '})
+}
+
+})
