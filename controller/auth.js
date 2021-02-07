@@ -1,4 +1,4 @@
-const ErrorResponse = require( '../utils/errorResponse.js');
+const ErrorResponse = require( '../utils/errorResponse');
 const User = require( '../models/User.js');
 const asyncHandler = require( 'express-async-handler');
 const dotenv = require( 'dotenv')
@@ -6,6 +6,7 @@ const referralCodes = require('referral-codes')
 const nodemailer = require("nodemailer");
 const crypto = require( 'crypto');
 const sendMail = require( '../services/email');
+const Profile = require('../models/Profile');
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ const transporter = nodemailer.createTransport({
   
 exports.register = asyncHandler(async (req, res, next) => {
 	
-	const { email, fullName, password, confirmPassword } = req.body;
+	const { email, fullName, password, confirmPassword, phone, referral } = req.body;
 
 	const existingUser = await User.findOne({email})
 
@@ -31,7 +32,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 	}
 	let referralCode = referralCodes.generate({
 		prefix: "lynen-",
-		lenght: 14
+		// length: 14
 	})
 
 	// Create user
@@ -39,11 +40,29 @@ exports.register = asyncHandler(async (req, res, next) => {
 		fullName,
 		email,
 		password,
-		referralCode
+		referralCode: referralCode[0]
 		// address: ' ',
 		// phone: ' '
 		
 	});
+
+	let referLink = `${req.protocol}://localhost:3000/register?referralCode=${user.referralCode}`
+	// ${req.get('host')}
+ await Profile.create({
+		phone,
+		user: user._id,
+		referLink
+	})
+	console.log('referral',referral)
+	if(referral) {
+		let referrer = await User.findOne({referralCode: referral }).exec()
+		
+		if(referrer) {
+			let referrerProfile  = await Profile.findOne({user: referrer._id})
+			referrerProfile.referrals.push(user.referralCode)
+			referrerProfile.save()
+		}
+	}
 
 	sendTokenResponse(user, 200, res);
 });

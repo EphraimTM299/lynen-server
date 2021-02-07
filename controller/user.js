@@ -213,8 +213,12 @@ exports.applyCouponToCart = asyncHandler(async(req, res) => {
 })
 
 exports.me = asyncHandler(async(req, res) => {
-  
-  const myProfile = await Profile.findOne({user: req.user._id})
+  let hostname = req.hostname;
+  let port = req.port;
+  let url = req.url;
+
+  // console.log('req', req)
+  const myProfile = await Profile.findOne({user: req.user._id}).populate({path: 'user', select: 'fullName referralCode email -_id'});
 
  if(myProfile) {
   return res.json(myProfile)
