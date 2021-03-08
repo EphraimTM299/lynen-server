@@ -37,8 +37,11 @@ const http = require('http').createServer(app)
 const PORT = process.env.PORT || 5000;
 connectDB();
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
-
-app.use(cors());
+var corsOptions = {
+	origin: 'https://lynen.netlify.app',
+	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(xss());
 const limiter = rateLimit({
