@@ -8,6 +8,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const colors = require('colors')
 const hpp = require('hpp')
+const compresion = require('compression')
 const rateLimit = require('express-rate-limit')
 const errorHandler = require('./middleware/error.js')
 const {mongoErrorHandler} = require('./middleware/mongoErrors')
@@ -46,6 +47,7 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(hpp());
 app.use(cors());
+app.use(compresion())
 app.use(mongoSanitize());
 app.use(express.json());
 app.use(mongoErrorHandler);
