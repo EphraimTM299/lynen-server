@@ -37,14 +37,14 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
-// app.use(helmet());
+app.use(helmet());
 app.use(xss());
-// const limiter = rateLimit({
-// 	windowMs: 10 * 60 * 1000,
-// 	max: 100
-// });
-// app.use(limiter);
-// app.use(hpp());
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000,
+	max: 100
+});
+app.use(limiter);
+app.use(hpp());
 app.use(cors());
 app.use(mongoSanitize());
 app.use(express.json());
@@ -52,26 +52,6 @@ app.use(mongoErrorHandler);
 // app.use(express.static(path.join(__dirname, 'public')));
 
 //Mount routes
-// app.use('/api/v1/shops', require('./routes/shops'));
-const transporter = nodemailer.createTransport({
-  host: "mailhog",
-  port: 1025,
-});
-
-app.get("/send_email/:email", (req, res) => {
-  const { email } = req.params;
-
-  const messageStatus = transporter.sendMail({
-    from: "My Company <company@companydomain.org>",
-    to: email,
-    subject: "Hi Mailhog!",
-    text: "This is the email content",
-  });
-
-  if (!messageStatus) res.json("Error sending message!").status(500);
-
-  res.json("Sent!").status(200);
-});
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin',adminRouter);
