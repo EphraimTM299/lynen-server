@@ -52,7 +52,7 @@ app.use(mongoErrorHandler);
 // app.use(express.static(path.join(__dirname, 'public')));
 
 //Mount routes
-
+app.use('/', (req, res) => res.json({success:true, message: 'API up'}));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin',adminRouter);
 app.use('/api/v1/manager',managerRouter);
