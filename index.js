@@ -38,6 +38,7 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
+app.use(cors());
 app.use(helmet());
 app.use(xss());
 const limiter = rateLimit({
@@ -46,7 +47,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 app.use(hpp());
-app.use(cors());
+
 app.use(compresion())
 app.use(mongoSanitize());
 app.use(express.json());
