@@ -32,7 +32,7 @@ const mtt = new EventEmitter()
 app.set('eventEmitter', mtt)
 
 
-const http = require('http').createServer(app)
+// const http = require('http').createServer(app)
 
 const PORT = process.env.PORT || 5000;
 connectDB();
@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 // 	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 //   }
 app.use(cors());
-// app.use(helmet());
+app.use(helmet());
 app.use(xss());
 const limiter = rateLimit({
 	windowMs: 10 * 60 * 1000,
