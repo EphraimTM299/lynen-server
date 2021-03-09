@@ -58,12 +58,18 @@ app.use(mongoErrorHandler);
 // app.use(express.static(path.join(__dirname, 'public')));
 
 //Mount routes
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
-    next();
-});
+// app.use(function (req, res, next) {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
+//     next();
+// });
+
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "https://lynen.netlify.app"); // update to match the domain you will make the request from
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+  });
 app.use('/', (req, res) => res.json({success:true, message: 'API updated'}));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin',adminRouter);
