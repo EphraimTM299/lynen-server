@@ -85,7 +85,7 @@ const io = require('socket.io')(http
 	
 	, {
 	cors: {
-	  origin: "http://localhost:3000",
+	  origin: "*",
 	  methods: ["GET", "POST", "PUT", "DELETE"],
 	  allowedHeaders: ["my-custom-header"],
 	  credentials: true
@@ -93,10 +93,11 @@ const io = require('socket.io')(http
 
   handlePreflightRequest: (req, res) => {
     res.writeHead(200, {
-      "Access-Control-Allow-Origin": "http://localhost:3000",
-      "Access-Control-Allow-Methods": "GET,POST",
-      "Access-Control-Allow-Headers": "my-custom-header",
-      "Access-Control-Allow-Credentials": true
+
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, PATCH, DELETE, OPTIONS"
+    //   "Access-Control-Allow-Headers": "my-custom-header",
+    //   "Access-Control-Allow-Credentials": true
     });
     res.end();
   }
