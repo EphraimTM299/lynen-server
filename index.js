@@ -64,7 +64,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
     next();
 });
-app.use('/', (req, res) => res.json({success:true, message: 'API up'}));
+app.use('/', (req, res) => res.json({success:true, message: 'API updated'}));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin',adminRouter);
 app.use('/api/v1/manager',managerRouter);
