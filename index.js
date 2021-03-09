@@ -37,11 +37,11 @@ const http = require('http').createServer(app)
 const PORT = process.env.PORT || 5000;
 connectDB();
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
-var corsOptions = {
-	origin: 'https://lynen.netlify.app',
-	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-  }
-app.use(cors(corsOptions));
+// var corsOptions = {
+// 	origin: 'https://lynen.netlify.app',
+// 	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+//   }
+// app.use(cors(corsOptions));
 app.use(helmet());
 app.use(xss());
 const limiter = rateLimit({
@@ -58,6 +58,12 @@ app.use(mongoErrorHandler);
 // app.use(express.static(path.join(__dirname, 'public')));
 
 //Mount routes
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
+    next();
+});
 app.use('/', (req, res) => res.json({success:true, message: 'API up'}));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin',adminRouter);
