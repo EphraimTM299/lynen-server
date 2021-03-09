@@ -81,35 +81,35 @@ app.use('/api/v1/categories', categoryRouter);
 app.use(errorHandler);
 
 
-const io = require('socket.io')(http
+// const io = require('socket.io')(http
 	
-	, {
-	cors: {
-	  origin: "*",
-	  methods: ["GET", "POST", "PUT", "DELETE"],
-	  allowedHeaders: ["my-custom-header"],
-	  credentials: true
-	},
+// 	, {
+// 	cors: {
+// 	  origin: "*",
+// 	  methods: ["GET", "POST", "PUT", "DELETE"],
+// 	  allowedHeaders: ["my-custom-header"],
+// 	  credentials: true
+// 	},
 
-  handlePreflightRequest: (req, res) => {
-    res.writeHead(200, {
+//   handlePreflightRequest: (req, res) => {
+//     res.writeHead(200, {
 
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, PATCH, DELETE, OPTIONS"
-    //   "Access-Control-Allow-Headers": "my-custom-header",
-    //   "Access-Control-Allow-Credentials": true
-    });
-    res.end();
-  }
-  }
-  )
+//       "Access-Control-Allow-Origin": "*",
+//       "Access-Control-Allow-Methods": "POST, GET, PATCH, DELETE, OPTIONS"
+//     //   "Access-Control-Allow-Headers": "my-custom-header",
+//     //   "Access-Control-Allow-Credentials": true
+//     });
+//     res.end();
+//   }
+//   }
+//   )
   
-io.on('connection', function(socket) {
-	console.log('Socket.io has connected backend')
-})
+// io.on('connection', function(socket) {
+// 	console.log('Socket.io has connected backend')
+// })
 
 
-http.listen(PORT, () => console.log(`App running in ${process.env.NODE_ENV} on port ${PORT}`.green));
+app.listen(PORT, () => console.log(`App running in ${process.env.NODE_ENV} on port ${PORT}`.green));
 
 // mtt.on('testing', (data) => {
 //   console.log('Event Emitter ',data)
