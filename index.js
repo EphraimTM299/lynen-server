@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 // 	origin: 'https://lynen.netlify.app',
 // 	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 //   }
-// app.use(cors());
+
 app.use(helmet());
 app.use(xss());
 const limiter = rateLimit({
@@ -67,14 +67,14 @@ app.use(mongoErrorHandler);
 //     next();
 // });
 app.use(function (req, res, next) {
-    res.set({"Access-Control-Allow-Origin": "https://lynen.netlify.app","Access-Control-Allow-Credentials": true, 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept', 'Access-Control-Allow-Methods': 'POST, GET, PATCH, DELETE, OPTIONS'});
+    // res.set({"Access-Control-Allow-Origin": "https://lynen.netlify.app","Access-Control-Allow-Credentials": true, 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept', 'Access-Control-Allow-Methods': 'POST, GET, PATCH, DELETE, OPTIONS'});
     // res.setHeader("Access-Control-Allow-Credentials", true);
     // res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     // res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
     next();
 });
 
-
+app.use(cors());
 // app.use(function(req, res, next) {
 // 	res.header("Access-Control-Allow-Origin", "https://lynen.netlify.app"); // update to match the domain you will make the request from
 // 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
