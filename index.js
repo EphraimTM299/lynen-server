@@ -59,11 +59,18 @@ app.use(mongoErrorHandler);
 
 
 //Mount routes
+// app.use(function (req, res, next) {
+//     res.setHeader("Access-Control-Allow-Origin", "https://lynen.netlify.app");
+//     res.setHeader("Access-Control-Allow-Credentials", true);
+//     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
+//     next();
+// });
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader("Access-Control-Allow-Credentials", true);
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
+    res.set({"Access-Control-Allow-Origin": "https://lynen.netlify.app","Access-Control-Allow-Credentials": true, 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept', 'Access-Control-Allow-Methods': 'POST, GET, PATCH, DELETE, OPTIONS'});
+    // res.setHeader("Access-Control-Allow-Credentials", true);
+    // res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    // res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
     next();
 });
 
