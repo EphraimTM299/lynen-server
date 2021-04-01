@@ -11,8 +11,8 @@ const {authCheck, adminCheck} = require('../../middleware/auth.js')
 
 const router = express.Router()
 
-// router.use(authCheck)
-// router.use(adminCheck)
+router.use(authCheck)
+router.use(adminCheck)
 
 
 // Admin User CRUD  
