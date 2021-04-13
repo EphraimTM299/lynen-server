@@ -4,17 +4,19 @@ const asyncHandler = require( 'express-async-handler');
 const dotenv = require( 'dotenv')
 const referralCodes = require('referral-codes')
 const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
 const crypto = require( 'crypto');
-const sendMail = require( '../services/email');
+const pug = require( 'pug');
+const htmlToText = require( 'html-to-text');
 const Profile = require('../models/Profile');
 
-dotenv.config();
 
-const transporter = nodemailer.createTransport({
-	host: "mailhog",
-	port: 1025,
-  });
 
+const transporter = nodemailer.createTransport(sendgridTransport({
+	auth: {
+		api_key: process.env.SENDGRID_KEY,
+	}
+}))
   
 exports.register = asyncHandler(async (req, res, next) => {
 	
@@ -136,60 +138,35 @@ exports.me = async (req, res, next) => {
 
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
 	const user = await User.findOne({ email: req.body.email });
-
 	
 	if (!user) {
-
 		return res.status(400).json({ success: false, message: 'Email could not be sent' })
-		
 	}
 
 	// Get reset token
 	const resetToken = user.getResetPasswordToken();
-
+	const email = user.email;
 	await user.save({ validateBeforeSave: false });
 
 	// create reset url
-	const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+	const resetUrl = `${process.env.APP_RESET_PASSWORD_URL}/${resetToken}`;
+	const html = pug.renderFile(`${__dirname}/../views/emails/passwordEmail.pug`, {firstname: user.firstname, lastname: user.lastname, resetUrl})
 
-	const message = `
-	<h1>You are receiving this email because you (or someone else)
-	has requested the reset of a password. </h1>
-	<p>Please go to this link to reset your password</p>
-	<a href=${resetUrl} clicktracking=off>Reset Password</a> `;
-
-	// const messageStatus = transporter.sendMail({
-	// 	from: process.env.EMAIL_FROM,
-	// 	to: email,
-	// 	subject: "Password Reset Request",
-	// 	text: message,
-	//   });
-	// console.log('messageStatus', messageStatus)
-	//   if (!messageStatus) res.status(500).json("Error sending message!");
-	
-	//   res.json("Sent!").status(200);
-
-
-	try {
-		await sendMail({
-			to: user.email,
+		transporter.sendMail({
+			from: process.env.EMAIL_FROM,
+			to: email,
         	subject: 'Password Reset Request',
-        	text: message,
+        	html,
+			text: htmlToText.fromString(html),
+		}).then(a => {
+			
+			return res.status(200).json({success: true, message: 'Reset password email sent'})
+		}).catch(err => {
+			
+			return res.status(400).json({ success: false, message: 'There was an error sending the email. Try again later' });
+			
 		});
 		
-
-
-		res.status(200).json({ success: true, message: 'Email sent' });
-	} catch (error) {
-	console.log('Error email controller', error)
-		user.resetPasswordToken = undefined;
-		user.resetPasswordExpire = undefined;
-
-		await user.save({ validateBeforeSave: false });
-
-		return res.status(400).json({ success: false, message: 'Email could not be sent' });
-		// return next(new ErrorResponse('Email could not be sent', 500));
-	}
 });
 
 exports.resetPassword = asyncHandler(async (req, res, next) => {
@@ -202,7 +179,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 	});
 
 	if (!user) {
-		return res.status(400).json({success: false, message: 'Email could not be sent'});
+		return res.status(400).json({success: false, message: 'Password could not be reset.'});
 		
 	}
 
@@ -214,6 +191,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
 	sendTokenResponse(user, 200, res);
 });
+
 
 
 exports.updateDetails = asyncHandler(async (req, res, next) => {

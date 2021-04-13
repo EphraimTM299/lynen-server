@@ -62,9 +62,11 @@ const newOrder = await Order.create({discount: totalAfterDiscount, coupon, laund
 exports.createOrder = asyncHandler(async(req, res) => {
   
 let userCart = await Cart.findOne({orderedBy: req.user._id})
-const {laundry, household, dryclean, sneaker,  instructions,cartTotal} = userCart
 
-const {coupon, totalAfterDiscount, pickup, dropoff, address} = req.body
+console.log('before userCart assignments')
+const {laundry, household, dryclean, sneaker,  instructions,cartTotal, coupon, totalAfterDiscount, pickup, address,dropoff} = userCart
+console.log('after userCart assignments')
+// const {coupon, totalAfterDiscount, pickup, dropoff, address} = req.body
 
 
 // if(totalAfterDiscount > 0) {
@@ -85,6 +87,7 @@ const {coupon, totalAfterDiscount, pickup, dropoff, address} = req.body
 // const newWash = await createWash.save()
 
 
+
 const newOrder = await Order.create({
   discount: totalAfterDiscount,
   coupon,
@@ -101,11 +104,14 @@ const newOrder = await Order.create({
   dropoff: new Date(dropoff),
 })
 
+
+console.log('new order', newOrder)
+
  if(newOrder) {
    userCart.remove()
   return res.status(201).json({success: true, message: 'Order created successfully'})
 } else {
-  return res.status(500).json({success: false, error: 'Failed to create order'}) 
+  return res.status(500).json({success: false, error: 'Failed to create new order'}) 
 }
 })
 
@@ -284,8 +290,8 @@ exports.getOrderHistory = asyncHandler(async(req, res) => {
 
 exports.addToCart = asyncHandler(async(req, res) => {
 
-  const { cart } = req.body
- 
+  const  cart  = req.body
+
   let dryclean = [];
   let sneaker = [];
   let household = [];
@@ -386,7 +392,6 @@ if(iron) {
   cartTotal = (Number(cartTotal) + Number(totalWeight * 15)).toFixed(2)
 }
 
-console.log('cart total', cartTotal)
 
 let newCart = await Cart.create({
   household: {items: household},
@@ -394,6 +399,12 @@ let newCart = await Cart.create({
   dryclean: {items: dryclean},
   laundry: {items: laundry, iron: cart.laundry.iron, perfumed: cart.laundry.perfumed, weight: Number(totalWeight).toFixed(2)},
   cartTotal,
+  coupon: cart.coupon,
+  address: cart.address,
+  pickup: cart.pickup,
+  dropoff: cart.dropoff,
+  totalAfterDiscount: cart.totalAfterDiscount,
+  instructions: cart.laundry.notes,
   orderedBy: user._id
 })
 

@@ -22,6 +22,7 @@ const cartSchema = Schema({
     instructions: String,
     address: String,
     pickup: Date,
+    dropoff: Date,
     coupon: String,
     cartTotal: Number,
     totalAfterDiscount: Number,

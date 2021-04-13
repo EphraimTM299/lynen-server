@@ -1,6 +1,6 @@
 const express = require('express');
 const { register, login, me,
-    //  resetPassword,
+     resetPassword,
       updateDetails, updatePassword, logout, forgotPassword } = require('../controller/auth.js');
 const { authCheck  } = require( '../middleware/auth.js');
 
@@ -15,7 +15,7 @@ router.post('/forgotpassword', forgotPassword);
 router.get('/me', authCheck, me);
 router.get('/updateDetails', authCheck, updateDetails);
 router.get('/updatePassword', authCheck, updatePassword);
-// router.post('/forgotpassword', forgotPassword);
-// router.put('/resetpassword/:resettoken', resetPassword);
+router.post('/forgotpassword', forgotPassword);
+router.patch('/resetpassword/:resettoken', resetPassword);
 
 module.exports = router;
