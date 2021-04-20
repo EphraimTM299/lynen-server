@@ -1,11 +1,13 @@
 const express = require('express')
+const { paymentId } = require('../controller/payments.js')
 const {basket, createProfile, createOrder, me, getOrder, getCompleteOrders, getOrderHistory, addToCart, getUserCart, emptyCart, applyCouponToCart} = require('../controller/user.js')
 const {authCheck, adminCheck} = require('../middleware/auth.js')
 
 
 const router = express.Router()
-
+router.get('/paymentId', paymentId)
 router.use(authCheck)
+
 
 router.post('/basket', basket)
 router.post('/profile', createProfile)
