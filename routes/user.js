@@ -1,6 +1,6 @@
 const express = require('express')
 const { paymentId } = require('../controller/payments.js')
-const {basket, createProfile, createOrder, me, getOrder, getCompleteOrders, getOrderHistory, addToCart, getUserCart, emptyCart, applyCouponToCart} = require('../controller/user.js')
+const {basket, createProfile, createOrder, me, getOrder, updateCart,getCompleteOrders, getOrderHistory, addToCart, getUserCart, emptyCart, applyCouponToCart} = require('../controller/user.js')
 const {authCheck, adminCheck} = require('../middleware/auth.js')
 
 
@@ -18,6 +18,7 @@ router.route('/cart')
     .post(addToCart)
     .get(getUserCart)
     .put(emptyCart)
+    .patch(updateCart)
 router.post('/cart/coupon', applyCouponToCart)
 router.get('/orders/completed', getCompleteOrders)
 router.get('/orders/history', getOrderHistory)

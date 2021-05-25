@@ -30,8 +30,6 @@ const app = express();
 // Event Emitter
 const mtt = new EventEmitter()
 app.set('eventEmitter', mtt)
-
-
 // const http = require('http').createServer(app)
 
 const PORT = process.env.PORT || 5000;

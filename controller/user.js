@@ -63,29 +63,11 @@ exports.createOrder = asyncHandler(async(req, res) => {
   
 let userCart = await Cart.findOne({orderedBy: req.user._id})
 
-console.log('before userCart assignments')
-const {laundry, household, dryclean, sneaker,  instructions,cartTotal, coupon, totalAfterDiscount, pickup, address,dropoff} = userCart
-console.log('after userCart assignments')
-// const {coupon, totalAfterDiscount, pickup, dropoff, address} = req.body
-
-
-// if(totalAfterDiscount > 0) {
-//   cost = totalAfterDiscount
-// } else {
-//   cost = cartTotal
-// }
-
-// const {weight, wprice, perfumed, iron, clothes, instructions, address,pickup} = req.body;
-
-//   const createWash = new Laundry({weight, perfumed, cost, iron})
-
-//   if(clothes) {
-//     clothes.forEach(c => createWash.clothes.push(c))
-//   }
- 
-
-// const newWash = await createWash.save()
-
+const {laundry, household, dryclean, sneaker,  instructions,cartTotal, coupon, totalAfterDiscount, 
+  // pickup,
+   address,
+  // dropoff
+} = userCart
 
 
 const newOrder = await Order.create({
@@ -100,12 +82,9 @@ const newOrder = await Order.create({
   address,
   totalAfterDiscount,
   cost: cartTotal,
-  pickup: new Date(pickup),
-  dropoff: new Date(dropoff),
+  // pickup: new Date(pickup),
+  // dropoff: new Date(dropoff),
 })
-
-
-console.log('new order', newOrder)
 
  if(newOrder) {
    userCart.remove()
@@ -304,10 +283,6 @@ exports.addToCart = asyncHandler(async(req, res) => {
  
   if(cartExists) cartExists.remove()
 
-  let iron = false
-if(cart.laundry.iron) {
-  iron = true
-}
 
  
   for (let i = 0; i < cart.laundry.items.length; i++) {
@@ -380,17 +355,12 @@ if(cart.laundry.iron) {
 }, 0)
 
   let  totalWeight = laundry.reduce((sum, obj) => {
-    return sum + (obj.weight)
+    return sum + (obj.weight * obj.itemCount)
 }, 0)
 
 
 
-cartTotal = Number((totalWeight * 35) + totalDryClean + totalHousehold + totalSneaker).toFixed(2)
-
-
-if(iron) {
-  cartTotal = (Number(cartTotal) + Number(totalWeight * 15)).toFixed(2)
-}
+cart.laundry.iron ? cartTotal = Number((totalWeight * 35) + (totalWeight * 15) + totalDryClean + totalHousehold + totalSneaker).toFixed(2) : cartTotal = Number((totalWeight * 35) + totalDryClean + totalHousehold + totalSneaker).toFixed(2)
 
 
 let newCart = await Cart.create({
@@ -412,6 +382,19 @@ if(newCart) {
   res.json({cart: newCart})
 } else {
   return res.status(500).json({success: false, error: 'Failed to save laundry basket '})
+}
+
+})
+exports.updateCart = asyncHandler(async(req, res) => {
+
+  const  {address}  = req.body
+  const updated = await Cart.findOneAndUpdate({orderedBy: req.user._id}, {address}, {new: true})
+
+
+if(updated) {
+  res.json('Cart updated successfully')
+} else {
+  return res.status(500).json({success: false, error: 'Failed to save update cart '})
 }
 
 })

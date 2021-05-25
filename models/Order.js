@@ -25,11 +25,11 @@ const orderSchema = new Schema({
      
     pickup: {
         type: Date,
-         required: true,
+        //  required: true,
     },
     dropoff: {
         type: Date,
-         required: true,
+        //  required: true,
     },
     address: {
         type: String,

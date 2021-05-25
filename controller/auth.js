@@ -158,11 +158,11 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
         	subject: 'Password Reset Request',
         	html,
 			text: htmlToText.fromString(html),
-		}).then(a => {
+		}).then(_ => {
 			
 			return res.status(200).json({success: true, message: 'Reset password email sent'})
 		}).catch(err => {
-			
+			console.log('forgot password error', err)
 			return res.status(400).json({ success: false, message: 'There was an error sending the email. Try again later' });
 			
 		});
