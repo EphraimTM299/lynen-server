@@ -1,6 +1,6 @@
 const express = require('express')
 const { paymentId } = require('../controller/payments.js')
-const {basket, createProfile, createOrder, me, getOrder, updateCart,getCompleteOrders, getOrderHistory, addToCart, getUserCart, emptyCart, applyCouponToCart} = require('../controller/user.js')
+const {basket, updateProfile, createOrder, me, getOrder, updateCart,getCompleteOrders, getOrderHistory, addToCart, getUserCart, emptyCart, applyCouponToCart} = require('../controller/user.js')
 const {authCheck, adminCheck} = require('../middleware/auth.js')
 
 
@@ -10,7 +10,7 @@ router.use(authCheck)
 
 
 router.post('/basket', basket)
-router.post('/profile', createProfile)
+router.post('/profile', updateProfile)
 router.route('/order')
     .post(createOrder)
     .get(getOrder)

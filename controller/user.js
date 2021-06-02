@@ -15,10 +15,11 @@ exports.basket = asyncHandler(async(req, res) => {
     res.json('Working well')
 })
 
-exports.createProfile = asyncHandler(async(req, res) => {
+exports.updateProfile = asyncHandler(async(req, res) => {
   
 const {phone, mobile, primaryAddress, secondaryAddress} = req.body
- const newProfile = await Profile.create({phone, mobile, primaryAddress, secondaryAddress, user: req.user._id})
+ const newProfile =  await Profile.findOneAndUpdate({user: req.user._id}, {phone, mobile, primaryAddress, secondaryAddress}, {new: true})
+
  if(newProfile) {
   return res.status(201).json({success: true, message: 'Profile created successfully'})
 } else {
